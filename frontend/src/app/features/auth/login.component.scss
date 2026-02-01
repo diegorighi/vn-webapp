@@ -1,0 +1,509 @@
+@use '../../../styles/abstracts' as *;
+
+// ============================================
+// LOGIN PAGE - Premium Design
+// ============================================
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+
+  // ==========================================
+  // BACKGROUND
+  // ==========================================
+  &__bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  &__gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+  }
+
+  &__pattern {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a373' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  // ==========================================
+  // CONTENT
+  // ==========================================
+  &__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 100%;
+    min-height: 100vh;
+
+    @include desktop {
+      grid-template-columns: 1fr 50rem;
+    }
+  }
+
+  // ==========================================
+  // BRANDING SECTION
+  // ==========================================
+  &__branding {
+    display: none;
+    padding: $spacing-2xl;
+    align-items: center;
+    justify-content: center;
+
+    @include desktop {
+      display: flex;
+    }
+  }
+
+  &__copyright {
+    text-align: center;
+    font-size: $font-size-xs;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: $spacing-xl;
+  }
+}
+
+// ============================================
+// BRANDING CONTENT
+// ============================================
+.branding-content {
+  text-align: center;
+  color: $color-text-inverse;
+  max-width: 48rem;
+
+  &__logo {
+    margin-bottom: $spacing-xl;
+
+    img {
+      height: 10rem;
+      width: auto;
+      filter: drop-shadow(0 0.4rem 0.8rem rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  &__title {
+    font-family: $font-family-heading;
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-md;
+    background: linear-gradient(135deg, #ffffff 0%, $color-secondary-light 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &__subtitle {
+    font-size: $font-size-lg;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 $spacing-2xl;
+    font-weight: $font-weight-normal;
+  }
+
+  &__features {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    text-align: left;
+  }
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.1rem solid rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius-xl;
+  backdrop-filter: blur(1rem);
+  transition: all $transition-normal;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(0.5rem);
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 4.4rem;
+    height: 4.4rem;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    border-radius: $border-radius-lg;
+    flex-shrink: 0;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+      color: $color-text-inverse;
+    }
+  }
+
+  &__text {
+    font-size: $font-size-base;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: $font-weight-medium;
+  }
+}
+
+// ============================================
+// FORM SECTION
+// ============================================
+.login-page__form-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-lg;
+
+  @include tablet {
+    padding: $spacing-2xl;
+  }
+}
+
+// ============================================
+// LOGIN CARD
+// ============================================
+.login-card {
+  width: 100%;
+  max-width: 44rem;
+  background: $color-bg-primary;
+  border-radius: $border-radius-2xl;
+  padding: $spacing-xl;
+  box-shadow: 
+    0 2.4rem 4.8rem rgba(0, 0, 0, 0.3),
+    0 0 0 0.1rem rgba(255, 255, 255, 0.1);
+  animation: slideInUp 0.6s ease-out;
+
+  @include tablet {
+    padding: $spacing-2xl;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__title {
+    font-family: $font-family-heading;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-sm;
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $color-text-muted;
+    margin: 0;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    border: 0.1rem solid rgba(239, 68, 68, 0.2);
+    border-radius: $border-radius-lg;
+    color: $color-error-dark;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-lg;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 0.1rem solid $color-border-light;
+
+    p {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      margin: 0;
+    }
+  }
+
+  &__link {
+    color: $color-secondary-dark;
+    font-weight: $font-weight-semibold;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-secondary;
+    }
+  }
+}
+
+// ============================================
+// LOGIN FORM
+// ============================================
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  &__options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+  }
+
+  &__forgot {
+    font-size: $font-size-sm;
+    color: $color-secondary-dark;
+    text-decoration: none;
+    font-weight: $font-weight-medium;
+    transition: color $transition-fast;
+    white-space: nowrap;
+
+    &:hover {
+      color: $color-secondary;
+    }
+  }
+
+  &__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-text-inverse;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    border: none;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all $transition-normal;
+    box-shadow: 0 0.4rem 1.2rem rgba(212, 163, 115, 0.4);
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-0.2rem);
+      box-shadow: 0 0.6rem 1.6rem rgba(212, 163, 115, 0.5);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ============================================
+// FORM FIELD
+// ============================================
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  &--error {
+    .form-field__input {
+      border-color: $color-error;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
+
+      &:focus {
+        border-color: $color-error;
+        box-shadow: 0 0 0 0.3rem rgba(239, 68, 68, 0.1);
+      }
+    }
+
+    .form-field__icon {
+      color: $color-error;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    position: absolute;
+    left: $spacing-md;
+    @include flex-center;
+    width: 2rem;
+    height: 2rem;
+    color: $color-text-muted;
+    pointer-events: none;
+    transition: color $transition-fast;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: $spacing-md $spacing-md $spacing-md 4.8rem;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    background: $color-bg-secondary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-lg;
+    transition: all $transition-fast;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-secondary;
+      background: $color-bg-primary;
+      box-shadow: 0 0 0 0.3rem rgba(212, 163, 115, 0.15);
+
+      + .form-field__icon {
+        color: $color-secondary;
+      }
+    }
+  }
+
+  &__toggle {
+    position: absolute;
+    right: $spacing-md;
+    @include flex-center;
+    width: 2.4rem;
+    height: 2.4rem;
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: color $transition-fast;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &:hover {
+      color: $color-text-secondary;
+    }
+  }
+
+  &__error {
+    font-size: $font-size-xs;
+    color: $color-error;
+  }
+}
+
+// ============================================
+// CHECKBOX
+// ============================================
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  user-select: none;
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+
+    &:checked + .checkbox__checkmark {
+      background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+      border-color: $color-secondary;
+
+      svg {
+        transform: scale(1);
+      }
+    }
+  }
+
+  &__checkmark {
+    @include flex-center;
+    width: 2rem;
+    height: 2rem;
+    background: $color-bg-secondary;
+    border: 0.1rem solid $color-border-default;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    svg {
+      width: 1.4rem;
+      height: 1.4rem;
+      color: $color-text-inverse;
+      transform: scale(0);
+      transition: transform $transition-fast;
+    }
+  }
+
+  &__label {
+    font-weight: $font-weight-medium;
+  }
+
+  &:hover &__checkmark {
+    border-color: $color-secondary;
+  }
+}
+
+// ============================================
+// SPINNER
+// ============================================
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.2rem solid rgba(255, 255, 255, 0.3);
+  border-top-color: $color-text-inverse;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Helper for current year
+:host {
+  display: contents;
+}

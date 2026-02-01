@@ -1,0 +1,178 @@
+@use '../../../../styles/abstracts' as *;
+
+// ============================================
+// PAGE LOADER
+// ============================================
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-secondary;
+
+  &--fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-xl;
+    padding: $spacing-2xl;
+  }
+
+  // Spinner
+  &__spinner {
+    position: relative;
+    width: 8rem;
+    height: 8rem;
+
+    &-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 0.3rem solid transparent;
+
+      &:nth-child(1) {
+        border-top-color: $color-secondary;
+        animation: spin1 1.5s linear infinite;
+      }
+
+      &:nth-child(2) {
+        border-right-color: $color-accent;
+        animation: spin2 1.5s linear infinite;
+        width: 6rem;
+        height: 6rem;
+        margin: auto;
+      }
+
+      &:nth-child(3) {
+        border-bottom-color: $color-tertiary;
+        animation: spin3 1.5s linear infinite;
+        width: 4rem;
+        height: 4rem;
+        margin: auto;
+      }
+    }
+  }
+
+  // Message
+  &__message {
+    font-family: $font-family-heading;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    margin: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  // Progress Bar
+  &__progress {
+    width: 24rem;
+    height: 0.6rem;
+    background: $color-bg-tertiary;
+    border-radius: $border-radius-full;
+    overflow: hidden;
+    position: relative;
+
+    &-bar {
+      height: 100%;
+      background: linear-gradient(90deg, $color-secondary 0%, $color-accent 50%, $color-secondary 100%);
+      background-size: 200% 100%;
+      border-radius: $border-radius-full;
+      transition: width 0.3s ease;
+      animation: shimmer 2s linear infinite;
+    }
+  }
+
+  &__progress-text {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes spin1 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin2 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes spin3 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Inline loader variant (for buttons, etc.)
+.btn-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  &__spinner {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0.2rem solid rgba(255, 255, 255, 0.3);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin1 0.8s linear infinite;
+  }
+}
+
+// Skeleton loader for content
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    $color-bg-tertiary 25%,
+    $color-bg-secondary 50%,
+    $color-bg-tertiary 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: $border-radius-md;
+
+  &--text {
+    height: 1.6rem;
+    margin-bottom: $spacing-sm;
+
+    &:last-child {
+      width: 80%;
+    }
+  }
+
+  &--title {
+    height: 2.4rem;
+    width: 60%;
+    margin-bottom: $spacing-md;
+  }
+
+  &--avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+  }
+
+  &--card {
+    height: 12rem;
+    border-radius: $border-radius-xl;
+  }
+}

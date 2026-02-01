@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+        xmlns="https://github.com/spotbugs/filter/3.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/4.8.3/spotbugs/etc/findbugsfilter.xsd">
+
+    <!--
+        SpotBugs exclusion filter for Vanessa Viagem Backoffice
+        Add exclusions here for legitimate exceptions to bug patterns
+    -->
+
+    <!-- Exclude test classes from most checks -->
+    <Match>
+        <Class name="~.*Test$"/>
+        <Or>
+            <Bug pattern="MS_PKGPROTECT"/>
+            <Bug pattern="MS_CANNOT_BE_FINAL"/>
+            <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+            <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Exclude test data providers -->
+    <Match>
+        <Class name="~.*TestDataProvider$"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Exclude test fixtures -->
+    <Match>
+        <Class name="~.*Fixtures$"/>
+    </Match>
+
+    <!-- Exclude all test scenarios (class names ending in Scenario) -->
+    <Match>
+        <Class name="~.*Scenario$"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Exclude all sealed interface scenarios (nested classes) -->
+    <Match>
+        <Class name="~.*Scenario\$.*"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Exclude test scenarios that match naming patterns -->
+    <Match>
+        <Class name="~.*TestScenarios.*"/>
+    </Match>
+
+    <!-- Full exclusion for all test source files in test package -->
+    <Match>
+        <Source name="~.*src/test/java/.*"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Spring Boot Application class -->
+    <Match>
+        <Class name="~.*Application$"/>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
+
+    <!--
+        AIVDEV-NOTE: EI_EXPOSE_REP/EI_EXPOSE_REP2 suppression for domain models
+        What: Suppress mutable internal representation warnings for domain entities
+        Why: Domain entities intentionally expose their internal state via getters
+             as they are immutable value objects (records) or controlled mutability
+             entities. The encapsulation is maintained at the domain boundary level.
+        Impact: SpotBugs will not flag these patterns in domain model classes.
+    -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.domain\.model.*"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Allow EI_EXPOSE_REP for all domain classes including nested packages -->
+    <Match>
+        <Class name="~com\.vanessaviagem\.backoffice\.domain\.model\..*"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Allow public fields in application ports (interfaces with record parameters) -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.application\.ports\..*"/>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+
+    <!-- Allow mutable static fields for configuration -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.config.*"/>
+        <Bug pattern="MS_SHOULD_BE_FINAL"/>
+    </Match>
+
+    <!-- Suppress serialization warnings for Spring DTOs -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.adapters\.in\..*"/>
+        <Or>
+            <Bug pattern="SE_NO_SERIALVERSIONID"/>
+            <Bug pattern="SE_BAD_FIELD"/>
+        </Or>
+    </Match>
+
+    <!-- Allow null checks in domain validation (Objects.requireNonNull is valid) -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.domain\..*"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+
+    <!-- Suppress unread field warnings in GraphQL inputs -->
+    <Match>
+        <Class name="~.*Input$"/>
+        <Or>
+            <Bug pattern="URF_UNREAD_FIELD"/>
+            <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+        </Or>
+    </Match>
+
+    <!-- Allow returning internal arrays in RowMappers for performance -->
+    <Match>
+        <Class name="~.*RowMapper$"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+
+    <!-- Suppress false positives for Java 21 features -->
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED"/>
+        <Method name="~.*Virtual.*"/>
+    </Match>
+
+    <!-- Allow non-transient non-serializable fields in Spring services -->
+    <Match>
+        <Package name="~com\.vanessaviagem\..*\.application\.services.*"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+</FindBugsFilter>

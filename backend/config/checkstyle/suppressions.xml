@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+    Checkstyle suppressions for Vanessa Viagem Backoffice
+    Add suppressions here for legitimate exceptions to style rules
+-->
+<suppressions>
+    <!-- Suppress Javadoc requirements for test classes -->
+    <suppress checks="JavadocType" files=".*Test\.java$"/>
+    <suppress checks="JavadocMethod" files=".*Test\.java$"/>
+    <suppress checks="JavadocVariable" files=".*Test\.java$"/>
+
+    <!-- Suppress Javadoc requirements for test data providers -->
+    <suppress checks="JavadocType" files=".*TestDataProvider\.java$"/>
+    <suppress checks="JavadocMethod" files=".*TestDataProvider\.java$"/>
+
+    <!-- Suppress Javadoc requirements for test scenarios -->
+    <suppress checks="JavadocType" files=".*Scenario\.java$"/>
+    <suppress checks="JavadocType" files=".*Scenarios\.java$"/>
+
+    <!-- Suppress Javadoc requirements for test fixtures -->
+    <suppress checks="JavadocType" files=".*Fixtures\.java$"/>
+    <suppress checks="JavadocMethod" files=".*Fixtures\.java$"/>
+
+    <!-- Suppress magic number check for test files -->
+    <suppress checks="MagicNumber" files=".*Test\.java$"/>
+    <suppress checks="MagicNumber" files=".*TestDataProvider\.java$"/>
+    <suppress checks="MagicNumber" files=".*Fixtures\.java$"/>
+
+    <!-- Suppress method length for test data providers (scenario builders can be long) -->
+    <suppress checks="MethodLength" files=".*TestDataProvider\.java$"/>
+
+    <!-- Suppress parameter number for test scenario records -->
+    <suppress checks="ParameterNumber" files=".*Scenario\.java$"/>
+    <suppress checks="ParameterNumber" files=".*Scenarios\.java$"/>
+
+    <!-- Suppress line length for all test code (regex pattern for test source path) -->
+    <suppress checks="LineLength" files="[/\\]src[/\\]test[/\\]java[/\\]"/>
+
+    <!-- Suppress method length for all test code -->
+    <suppress checks="MethodLength" files="[/\\]src[/\\]test[/\\]java[/\\]"/>
+
+    <!-- Suppress import order checks for all files (existing code has different ordering) -->
+    <suppress checks="CustomImportOrder" files=".*\.java$"/>
+
+    <!-- Suppress file length for generated code -->
+    <suppress checks="FileLength" files=".*Generated.*\.java$"/>
+    <suppress checks="FileLength" files=".*TestDataProvider\.java$"/>
+
+    <!-- Spring Boot application class does not need Javadoc -->
+    <suppress checks="JavadocType" files=".*Application\.java$"/>
+
+    <!-- Configuration classes are typically self-documenting -->
+    <suppress checks="JavadocType" files=".*Config\.java$"/>
+    <suppress checks="JavadocMethod" files=".*Config\.java$"/>
+
+    <!-- Suppress line length for Repository files with SQL strings -->
+    <suppress checks="LineLength" files=".*Repository.*\.java$"/>
+
+    <!-- Allow utility class constructors in domain exceptions -->
+    <suppress checks="HideUtilityClassConstructor" files=".*Exception\.java$"/>
+</suppressions>

@@ -1,0 +1,421 @@
+@use '../../../../styles/abstracts' as *;
+
+// ============================================
+// OVERLAY (MOBILE)
+// ============================================
+.aside-overlay {
+  position: fixed;
+  top: $navbar-height;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+  backdrop-filter: blur(0.4rem);
+  z-index: $z-index-aside - 1;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ============================================
+// ASIDE MENU - Horizonte Dourado
+// ============================================
+.aside-menu {
+  position: fixed;
+  top: $navbar-height;
+  left: 0;
+  bottom: 0;
+  width: $aside-width;
+  background: $color-bg-primary;
+  border-right: 0.1rem solid $color-border-light;
+  z-index: $z-index-aside;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateX(-100%);
+  transition: transform $transition-smooth;
+  @include custom-scrollbar;
+
+  // Textura sutil
+  background-image:
+    linear-gradient(to bottom, $color-bg-primary 0%, $color-bg-secondary 100%);
+
+  // Borda dourada sutil no topo
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.3rem;
+    background: $gradient-gold;
+    opacity: 0.4;
+  }
+
+  &--open {
+    transform: translateX(0);
+    box-shadow: $shadow-xl;
+  }
+
+  // ==========================================
+  // NAVIGATION
+  // ==========================================
+  &__nav {
+    padding: $spacing-lg 0;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    margin-bottom: $spacing-xs;
+  }
+
+  // ==========================================
+  // MENU LINK (Level 1)
+  // ==========================================
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
+    color: $color-text-secondary;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    letter-spacing: $letter-spacing-normal;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all $transition-normal;
+    position: relative;
+
+    // Barra lateral de indicacao
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.3rem;
+      height: 0;
+      background: $gradient-gold;
+      border-radius: 0 $border-radius-sm $border-radius-sm 0;
+      transition: height $transition-normal;
+    }
+
+    &:hover {
+      background-color: $color-bg-tertiary;
+      color: $color-text-primary;
+
+      &::before {
+        height: 50%;
+      }
+
+      .aside-menu__icon {
+        color: $color-secondary;
+        transform: scale(1.1);
+      }
+    }
+
+    &:focus-visible {
+      outline: $border-width-md solid $color-secondary;
+      outline-offset: -0.2rem;
+    }
+
+    &--active {
+      background: linear-gradient(90deg, rgba(212, 163, 115, 0.12) 0%, transparent 100%);
+      color: $color-text-primary;
+
+      &::before {
+        height: 60%;
+      }
+
+      .aside-menu__icon {
+        color: $color-secondary;
+      }
+
+      .aside-menu__label {
+        font-weight: $font-weight-semibold;
+      }
+    }
+
+    &--parent {
+      justify-content: flex-start;
+    }
+
+    &--expanded {
+      background-color: $color-bg-tertiary;
+      color: $color-text-primary;
+
+      .aside-menu__icon {
+        color: $color-secondary;
+      }
+    }
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    color: $color-text-muted;
+    transition: all $transition-normal;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  &__label {
+    flex: 1;
+    text-align: left;
+    @include text-truncate;
+  }
+
+  &__arrow {
+    @include flex-center;
+    width: 2rem;
+    height: 2rem;
+    color: $color-text-muted;
+    transition: transform $transition-normal;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+
+    &--rotated {
+      transform: rotate(180deg);
+      color: $color-secondary;
+    }
+  }
+
+  // ==========================================
+  // SUBMENU (Level 2)
+  // ==========================================
+  &__submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, $color-bg-secondary 0%, $color-bg-tertiary 100%);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height $transition-smooth,
+                opacity $transition-fast;
+
+    &--open {
+      max-height: 60rem;
+      opacity: 1;
+    }
+  }
+
+  &__subitem {
+    margin: 0;
+  }
+
+  &__sublink {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    width: 100%;
+    padding: $spacing-sm $spacing-lg $spacing-sm $spacing-3xl;
+    color: $color-text-secondary;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all $transition-fast;
+    position: relative;
+
+    // Linha conectora
+    &::before {
+      content: '';
+      position: absolute;
+      left: 3.2rem;
+      top: 50%;
+      width: 1.2rem;
+      height: 0.1rem;
+      background: $color-border-default;
+      transition: background $transition-fast;
+    }
+
+    &:hover {
+      background-color: rgba(212, 163, 115, 0.08);
+      color: $color-text-primary;
+
+      &::before {
+        background: $color-secondary;
+      }
+
+      .aside-menu__subicon {
+        color: $color-secondary;
+      }
+    }
+
+    &:focus-visible {
+      outline: $border-width-md solid $color-secondary;
+      outline-offset: -0.2rem;
+    }
+
+    &--active {
+      color: $color-secondary-dark;
+      font-weight: $font-weight-medium;
+
+      &::before {
+        background: $color-secondary;
+        width: 1.6rem;
+      }
+
+      .aside-menu__subicon {
+        color: $color-secondary;
+      }
+    }
+
+    &--parent {
+      justify-content: flex-start;
+    }
+
+    &--expanded {
+      background-color: rgba(212, 163, 115, 0.06);
+      color: $color-text-primary;
+    }
+  }
+
+  &__subicon {
+    @include flex-center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    color: $color-text-muted;
+    transition: color $transition-fast;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
+
+  &__sublabel {
+    flex: 1;
+    text-align: left;
+    @include text-truncate;
+  }
+
+  &__subarrow {
+    @include flex-center;
+    width: 1.8rem;
+    height: 1.8rem;
+    color: $color-text-muted;
+    transition: transform $transition-normal;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+
+    &--rotated {
+      transform: rotate(180deg);
+      color: $color-secondary;
+    }
+  }
+
+  // ==========================================
+  // NESTED SUBMENU (Level 3)
+  // ==========================================
+  &__nested-submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: $color-bg-tertiary;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height $transition-smooth,
+                opacity $transition-fast;
+
+    &--open {
+      max-height: 40rem;
+      opacity: 1;
+    }
+  }
+
+  &__nested-item {
+    margin: 0;
+  }
+
+  &__nested-link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    width: 100%;
+    padding: $spacing-sm $spacing-lg $spacing-sm $spacing-4xl;
+    color: $color-text-muted;
+    text-decoration: none;
+    font-size: $font-size-xs;
+    transition: all $transition-fast;
+    position: relative;
+
+    // Ponto de conexao
+    &::before {
+      content: '';
+      position: absolute;
+      left: 4.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.6rem;
+      height: 0.6rem;
+      background: $color-border-default;
+      border-radius: $border-radius-full;
+      transition: all $transition-fast;
+    }
+
+    &:hover {
+      background-color: rgba(212, 163, 115, 0.1);
+      color: $color-text-primary;
+
+      &::before {
+        background: $color-secondary;
+        transform: translateY(-50%) scale(1.2);
+      }
+    }
+
+    &:focus-visible {
+      outline: $border-width-md solid $color-secondary;
+      outline-offset: -0.2rem;
+    }
+
+    &--active {
+      color: $color-secondary-dark;
+      font-weight: $font-weight-medium;
+
+      &::before {
+        background: $color-secondary;
+        box-shadow: 0 0 0.6rem rgba(212, 163, 115, 0.5);
+      }
+    }
+  }
+
+  &__nested-icon {
+    @include flex-center;
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+    color: inherit;
+
+    svg {
+      width: 1.4rem;
+      height: 1.4rem;
+    }
+  }
+
+  &__nested-label {
+    flex: 1;
+    text-align: left;
+    @include text-truncate;
+  }
+}

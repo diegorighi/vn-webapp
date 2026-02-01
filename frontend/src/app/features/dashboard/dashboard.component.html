@@ -1,0 +1,193 @@
+<article class="dashboard">
+  <!-- Header -->
+  <header class="dashboard__header">
+    <div class="dashboard__header-content">
+      <h1 class="dashboard__title">Dashboard</h1>
+      <p class="dashboard__subtitle">Bem-vindo de volta! Aqui está o resumo da sua agência</p>
+    </div>
+    <div class="dashboard__header-actions">
+      <button class="btn btn--outline btn--sm" (click)="refreshData()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+        Atualizar
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Cards -->
+  <section class="dashboard__stats" aria-label="Estatísticas">
+    @for (stat of stats(); track stat.label) {
+      <article class="stat-card" [attr.data-testid]="'stat-' + stat.label.toLowerCase().replace(' ', '-')">
+        <div class="stat-card__icon" [class]="'stat-card__icon--' + stat.color">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path [attr.d]="getIcon(stat.icon)"/>
+          </svg>
+        </div>
+        <div class="stat-card__content">
+          <p class="stat-card__value">{{ stat.value }}</p>
+          <p class="stat-card__label">{{ stat.label }}</p>
+        </div>
+        <span class="stat-card__trend" [class]="stat.trend.startsWith('+') ? 'stat-card__trend--positive' : 'stat-card__trend--negative'">
+          {{ stat.trend }}
+        </span>
+      </article>
+    }
+  </section>
+
+  <!-- Main Grid -->
+  <div class="dashboard__grid">
+    <!-- Left Column -->
+    <div class="dashboard__main">
+      <!-- Quick Actions -->
+      <section class="dashboard__section">
+        <h2 class="dashboard__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          Ações Rápidas
+        </h2>
+        <div class="quick-actions">
+          @for (action of quickActions; track action.label) {
+            <a [routerLink]="action.route" class="quick-action" [attr.data-testid]="'action-' + action.label.toLowerCase().replace(' ', '-')">
+              <span class="quick-action__icon" [class]="'quick-action__icon--' + action.color">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path [attr.d]="getIcon(action.icon)"/>
+                </svg>
+              </span>
+              <span class="quick-action__label">{{ action.label }}</span>
+              <span class="quick-action__arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+              </span>
+            </a>
+          }
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="dashboard__section">
+        <div class="section-header">
+          <h2 class="dashboard__section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            </svg>
+            Desempenho
+          </h2>
+          <div class="chart-tabs">
+            <button 
+              class="chart-tabs__btn" 
+              [class.chart-tabs__btn--active]="selectedPeriod() === 'week'"
+              (click)="setPeriod('week')">
+              Semana
+            </button>
+            <button 
+              class="chart-tabs__btn" 
+              [class.chart-tabs__btn--active]="selectedPeriod() === 'month'"
+              (click)="setPeriod('month')">
+              Mês
+            </button>
+            <button 
+              class="chart-tabs__btn" 
+              [class.chart-tabs__btn--active]="selectedPeriod() === 'year'"
+              (click)="setPeriod('year')">
+              Ano
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <div class="chart-placeholder__bars">
+              @for (bar of chartData; track $index) {
+                <div class="chart-placeholder__bar-wrapper">
+                  <div 
+                    class="chart-placeholder__bar" 
+                    [style.height.%]="bar.value"
+                    [class.chart-placeholder__bar--active]="bar.active">
+                    <span class="chart-placeholder__tooltip">{{ bar.label }}: {{ bar.value }}%</span>
+                  </div>
+                  <span class="chart-placeholder__label">{{ bar.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column -->
+    <aside class="dashboard__sidebar">
+      <!-- Recent Activity -->
+      <section class="dashboard__section">
+        <h2 class="dashboard__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+          </svg>
+          Atividades Recentes
+        </h2>
+        <div class="activity-list">
+          @for (activity of recentActivities; track activity.id) {
+            <div class="activity-item">
+              <span class="activity-item__icon" [class]="'activity-item__icon--' + activity.type">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path [attr.d]="getIcon(activity.icon)"/>
+                </svg>
+              </span>
+              <div class="activity-item__content">
+                <p class="activity-item__text">{{ activity.text }}</p>
+                <span class="activity-item__time">{{ activity.time }}</span>
+              </div>
+            </div>
+          }
+        </div>
+        <a routerLink="/app/atividades" class="dashboard__view-all">
+          Ver todas
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+          </svg>
+        </a>
+      </section>
+
+      <!-- Upcoming Trips -->
+      <section class="dashboard__section">
+        <h2 class="dashboard__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+          </svg>
+          Próximas Viagens
+        </h2>
+        <div class="trip-list">
+          @for (trip of upcomingTrips; track trip.id) {
+            <div class="trip-card">
+              <div class="trip-card__route">
+                <span class="trip-card__origin">{{ trip.origin }}</span>
+                <span class="trip-card__arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                  </svg>
+                </span>
+                <span class="trip-card__destination">{{ trip.destination }}</span>
+              </div>
+              <div class="trip-card__details">
+                <span class="trip-card__date">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+                  </svg>
+                  {{ trip.date }}
+                </span>
+                <span class="trip-card__client">{{ trip.client }}</span>
+              </div>
+            </div>
+          }
+        </div>
+        <a routerLink="/app/viagens" class="dashboard__view-all">
+          Ver todas
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+          </svg>
+        </a>
+      </section>
+    </aside>
+  </div>
+</article>

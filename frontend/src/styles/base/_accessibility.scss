@@ -1,0 +1,59 @@
+@use '../abstracts' as *;
+
+// ============================================
+// ACCESSIBILITY UTILITIES
+// ============================================
+
+// Visually hidden but accessible to screen readers
+.visually-hidden,
+.sr-only {
+  @include visually-hidden;
+}
+
+// Skip link for keyboard navigation
+.skip-link {
+  position: absolute;
+  top: -4rem;
+  left: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-primary;
+  color: $color-text-inverse;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-md;
+  z-index: $z-index-tooltip;
+  transition: top $transition-fast;
+
+  &:focus {
+    top: $spacing-md;
+  }
+}
+
+// Focus visible for all interactive elements
+:focus-visible {
+  outline: $border-width-md solid $color-primary;
+  outline-offset: 0.2rem;
+}
+
+// Remove focus outline for mouse users
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  :root {
+    --border-width: 0.2rem;
+  }
+}

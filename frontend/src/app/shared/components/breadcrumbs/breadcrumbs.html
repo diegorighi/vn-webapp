@@ -1,0 +1,29 @@
+@if (breadcrumbs() && breadcrumbs().length > 0) {
+  <nav class="breadcrumbs" aria-label="Navegacao estrutural">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a routerLink="/dashboard" class="breadcrumbs__link breadcrumbs__link--home" aria-label="Ir para Dashboard">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="breadcrumbs__icon">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span>Inicio</span>
+        </a>
+      </li>
+
+      @for (crumb of breadcrumbs(); track crumb.url) {
+        <li class="breadcrumbs__item">
+          <span class="breadcrumbs__separator" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </span>
+          @if (crumb.isLast) {
+            <span class="breadcrumbs__current" aria-current="page">{{ crumb.label }}</span>
+          } @else {
+            <a [routerLink]="crumb.url" class="breadcrumbs__link">{{ crumb.label }}</a>
+          }
+        </li>
+      }
+    </ol>
+  </nav>
+}

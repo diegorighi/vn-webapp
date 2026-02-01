@@ -1,0 +1,69 @@
+@use '../../../../styles/abstracts' as *;
+
+// ============================================
+// FOOTER - Horizonte Dourado
+// ============================================
+.footer {
+  height: $footer-height;
+  background: $color-bg-primary;
+  border-top: 0.1rem solid $color-border-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 $spacing-lg;
+  position: relative;
+
+  // Linha decorativa dourada no topo
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12rem;
+    height: 0.2rem;
+    background: $gradient-gold;
+    border-radius: 0 0 $border-radius-full $border-radius-full;
+    opacity: 0.5;
+  }
+
+  @include tablet {
+    padding: 0 $spacing-xl;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-xs;
+    text-align: center;
+
+    @include tablet {
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      max-width: $container-max-width;
+    }
+  }
+
+  &__copyright {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    margin: 0;
+    letter-spacing: $letter-spacing-wide;
+
+    @include tablet {
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__version {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    margin: 0;
+    font-family: $font-family-mono;
+    background: rgba(212, 163, 115, 0.1);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+  }
+}

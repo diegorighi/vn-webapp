@@ -1,0 +1,604 @@
+@use '../../../../../styles/abstracts' as *;
+
+// ============================================
+// CLIENTE FORM
+// ============================================
+.cliente-form {
+  max-width: 96rem;
+  margin: 0 auto;
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-lg;
+    border-bottom: 0.1rem solid $color-border-light;
+
+    @include tablet {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__title-area {
+    flex: 1;
+  }
+
+  &__title {
+    font-family: $font-family-heading;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-xs;
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $color-text-muted;
+    margin: 0;
+  }
+}
+
+// ============================================
+// FORM
+// ============================================
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+
+  &__section {
+    background: $color-bg-primary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-xl;
+    padding: $spacing-lg;
+    box-shadow: $shadow-card;
+
+    @include tablet {
+      padding: $spacing-xl;
+    }
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 0.1rem solid $color-border-light;
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+      color: $color-secondary;
+    }
+  }
+
+  &__section-counter {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-text-muted;
+    background: $color-bg-tertiary;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+    margin-left: $spacing-xs;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-lg;
+    }
+
+    @include desktop {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--2 {
+      @include tablet {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include desktop {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &--small {
+      @include desktop {
+        grid-column: span 1;
+      }
+    }
+
+    &--large {
+      @include tablet {
+        grid-column: span 2;
+      }
+    }
+
+    &--full {
+      @include tablet {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+  }
+
+  &__required {
+    color: $color-error;
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__input-spinner {
+    position: absolute;
+    right: $spacing-md;
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0.2rem solid $color-border-light;
+    border-top-color: $color-secondary;
+    border-radius: $border-radius-full;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__input,
+  &__select {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-base;
+    font-family: inherit;
+    color: $color-text-primary;
+    background: $color-bg-primary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-lg;
+    transition: all $transition-fast;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-secondary;
+      box-shadow: 0 0 0 0.3rem rgba($color-secondary, 0.15);
+    }
+
+    &:disabled {
+      background: $color-bg-tertiary;
+      cursor: not-allowed;
+    }
+
+    &--error {
+      border-color: $color-error;
+
+      &:focus {
+        box-shadow: 0 0 0 0.3rem rgba($color-error, 0.15);
+      }
+    }
+
+    &--readonly {
+      background-color: $color-bg-tertiary;
+      color: $color-text-secondary;
+      cursor: not-allowed;
+
+      &:focus {
+        border-color: $color-border-light;
+        box-shadow: none;
+      }
+    }
+
+    &--loading {
+      padding-right: $spacing-2xl;
+    }
+  }
+
+  &__select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-sm center;
+    background-size: 2rem;
+    padding-right: $spacing-xl;
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: $spacing-md;
+    font-size: $font-size-base;
+    font-family: inherit;
+    color: $color-text-primary;
+    background: $color-bg-primary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-lg;
+    resize: vertical;
+    min-height: 12rem;
+    transition: all $transition-fast;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-secondary;
+      box-shadow: 0 0 0 0.3rem rgba($color-secondary, 0.15);
+    }
+  }
+
+  &__error {
+    font-size: $font-size-xs;
+    color: $color-error;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 0.4rem;
+      height: 0.4rem;
+      background: $color-error;
+      border-radius: $border-radius-full;
+    }
+  }
+
+  &__hint {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-md;
+    padding-top: $spacing-lg;
+    border-top: 0.1rem solid $color-border-light;
+  }
+
+  // ==========================================
+  // ARRAY ITEMS (Documentos/Enderecos)
+  // ==========================================
+  &__array {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  &__array-item {
+    padding: $spacing-lg;
+    background: $color-bg-secondary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__array-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__array-item-badge {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-text-muted;
+    background: $color-bg-tertiary;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+
+    &--principal {
+      color: $color-secondary-dark;
+      background: rgba($color-secondary, 0.1);
+    }
+  }
+
+  &__array-item-actions {
+    display: flex;
+    gap: $spacing-xs;
+  }
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  font-family: inherit;
+  text-decoration: none;
+  border: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  &--primary {
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    color: $color-primary-dark;
+    box-shadow: 0 0.2rem 0.8rem rgba($color-secondary, 0.3);
+
+    &:hover {
+      transform: translateY(-0.2rem);
+      box-shadow: 0 0.4rem 1.2rem rgba($color-secondary, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: $color-secondary-dark;
+    border: 0.1rem solid $color-secondary;
+
+    &:hover:not(:disabled) {
+      background: rgba($color-secondary, 0.1);
+    }
+
+    &.btn--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text-secondary;
+    border: 0.1rem solid $color-border-light;
+
+    &:hover {
+      background: $color-bg-tertiary;
+      border-color: $color-border-default;
+    }
+  }
+
+  &--sm {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ============================================
+// ICON BUTTONS
+// ============================================
+.btn-icon {
+  @include flex-center;
+  width: 3.2rem;
+  height: 3.2rem;
+  background: transparent;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  color: $color-text-muted;
+  transition: all $transition-fast;
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  &:hover {
+    background: $color-bg-tertiary;
+  }
+
+  &--star:hover {
+    color: $color-warning;
+    background: rgba($color-warning, 0.1);
+  }
+
+  &--delete:hover {
+    color: $color-error;
+    background: rgba($color-error, 0.1);
+  }
+}
+
+// ============================================
+// FILE UPLOAD
+// ============================================
+.file-upload {
+  position: relative;
+  width: 100%;
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &__input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    padding: $spacing-xl $spacing-lg;
+    background: $color-bg-primary;
+    border: 0.2rem dashed $color-border-default;
+    border-radius: $border-radius-xl;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: $color-secondary;
+      background: rgba($color-secondary, 0.02);
+    }
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 4.8rem;
+    height: 4.8rem;
+    background: linear-gradient(135deg, rgba($color-secondary, 0.1) 0%, rgba($color-secondary, 0.05) 100%);
+    border-radius: $border-radius-lg;
+    color: $color-secondary;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    text-align: center;
+
+    strong {
+      color: $color-secondary-dark;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  &__hint {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+}
+
+// ============================================
+// FILE PREVIEW
+// ============================================
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-primary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-lg;
+  position: relative;
+
+  &__thumbnail {
+    width: 6rem;
+    height: 6rem;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: $color-bg-tertiary;
+    @include flex-center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    @include text-truncate;
+  }
+
+  &__type {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__remove {
+    @include flex-center;
+    width: 3.2rem;
+    height: 3.2rem;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    color: $color-text-muted;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

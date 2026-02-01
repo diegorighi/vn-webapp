@@ -1,0 +1,44 @@
+# =============================================================================
+# HML (HOMOLOGACAO) PROFILE - PostgreSQL + Keycloak
+# =============================================================================
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:vanessa}
+    username: ${DB_USERNAME:vanessa}
+    password: ${DB_PASSWORD:vanessa123}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  graphql:
+    path: /graphql
+    graphiql:
+      enabled: true
+      path: /graphiql
+
+# =============================================================================
+# SECURITY - Keycloak (HML environment)
+# =============================================================================
+security:
+  disabled: false
+
+spring.security.oauth2.resourceserver.jwt:
+  issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/vanessa}
+  jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://keycloak:8080/realms/vanessa/protocol/openid-connect/certs}
+
+# =============================================================================
+# KEYCLOAK CONFIG
+# =============================================================================
+keycloak:
+  auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL:http://keycloak:8080}
+  realm: vanessa
+  client-id: backoffice-web
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+logging:
+  level:
+    org.springframework.security: INFO
+    com.vanessaviagem: INFO

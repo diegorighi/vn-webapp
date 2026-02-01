@@ -1,0 +1,21 @@
+// ============================================
+// FUNCAO DE CONVERSAO PX PARA REM
+// ============================================
+// Base: 10px (62.5% de 16px)
+// Uso: rem(14) retorna 1.4rem
+
+@function rem($pixels) {
+  @if unitless($pixels) {
+    @return calc($pixels / 10) * 1rem;
+  } @else {
+    @warn "O valor #{$pixels} deve ser sem unidade.";
+    @return $pixels;
+  }
+}
+
+// ============================================
+// FUNCAO DE OPACIDADE DE COR
+// ============================================
+@function alpha($color, $opacity) {
+  @return rgba($color, $opacity);
+}

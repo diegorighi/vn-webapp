@@ -1,0 +1,342 @@
+type Query {
+    # Saldo de Milhas
+    saldosMilhas: [SaldoMilhas!]!
+    saldosMilhasPorOwner(owner: String!): [SaldoMilhas!]!
+    totalMilhas: Long!
+    totaisPorOwner: [TotalPorOwner!]!
+    totaisPorPrograma: [TotalPorPrograma!]!
+    resumoMilhas: ResumoMilhas!
+}
+
+type Mutation {
+    # Registrar ou atualizar saldo de milhas
+    registrarSaldo(input: SaldoMilhasInput!): SaldoMilhas!
+    removerSaldo(id: ID!): Boolean!
+}
+
+# Tipos
+
+type SaldoMilhas {
+    id: ID!
+    programa: String!
+    owner: String!
+    quantidade: Long!
+    updatedAt: DateTime!
+    createdAt: DateTime!
+}
+
+type TotalPorOwner {
+    owner: String!
+    total: Long!
+}
+
+type TotalPorPrograma {
+    programa: String!
+    total: Long!
+}
+
+type ResumoMilhas {
+    totalGeral: Long!
+    quantidadeRegistros: Int!
+    porOwner: [TotalPorOwner!]!
+    porPrograma: [TotalPorPrograma!]!
+    saldos: [SaldoMilhas!]!
+}
+
+# Inputs
+
+input SaldoMilhasInput {
+    programa: String!
+    owner: String!
+    quantidade: Long!
+}
+
+# Scalars
+
+scalar Long
+scalar DateTime
+scalar BigDecimal
+
+# ============================================
+# CONTA PROGRAMA (Miles Account)
+# ============================================
+
+type ContaPrograma {
+  id: ID!
+  programaId: ID!
+  programaNome: String!
+  owner: String!
+  saldoMilhas: Long!
+  custoBaseTotalBRL: BigDecimal!
+  custoMedioMilheiroAtual: BigDecimal!
+  criadoEm: DateTime!
+  atualizadoEm: DateTime!
+}
+
+type Transacao {
+  id: ID!
+  contaProgramaId: ID!
+  tipo: TipoTransacao!
+  milhas: Long!
+  valorBRL: BigDecimal!
+  fonte: String
+  observacao: String
+  data: DateTime!
+  criadoEm: DateTime!
+}
+
+enum TipoTransacao {
+  COMPRA
+  VENDA
+  BONUS
+}
+
+type ResultadoCompra {
+  transacao: Transacao!
+  contaAtualizada: ContaPrograma!
+}
+
+type ResultadoVenda {
+  transacao: Transacao!
+  contaAtualizada: ContaPrograma!
+  custoRemovido: BigDecimal!
+  lucro: BigDecimal!
+}
+
+type ResumoContas {
+  totalGeral: Long!
+  quantidadeContas: Int!
+  porOwner: [TotalPorOwner!]!
+  porPrograma: [TotalPorPrograma!]!
+  contas: [ContaPrograma!]!
+}
+
+# Input types for ContaPrograma operations
+
+input RegistrarCompraInput {
+  programaId: ID!
+  programaNome: String!
+  owner: String!
+  milhas: Long!
+  valor: BigDecimal!
+  fonte: String
+  observacao: String
+}
+
+input RegistrarBonusInput {
+  programaId: ID!
+  programaNome: String!
+  owner: String!
+  milhas: Long!
+  fonte: String
+  observacao: String
+}
+
+input RegistrarVendaInput {
+  programaId: ID!
+  programaNome: String!
+  owner: String!
+  milhas: Long!
+  valorVenda: BigDecimal!
+  observacao: String
+}
+
+# Extend Query type with ContaPrograma and Transacao operations
+extend type Query {
+  # Contas de Programa
+  contasPrograma: [ContaPrograma!]!
+  contasProgramaPorOwner(owner: String!): [ContaPrograma!]!
+  contaPrograma(id: ID!): ContaPrograma
+  resumoContas: ResumoContas!
+
+  # Transacoes
+  transacoes(contaProgramaId: ID!): [Transacao!]!
+  transacoesPorPeriodo(contaProgramaId: ID!, inicio: DateTime!, fim: DateTime!): [Transacao!]!
+  transacoesPorTipo(contaProgramaId: ID!, tipo: TipoTransacao!): [Transacao!]!
+}
+
+# Extend Mutation type with transaction operations
+extend type Mutation {
+  # Registrar transacoes
+  registrarCompra(input: RegistrarCompraInput!): ResultadoCompra!
+  registrarBonus(input: RegistrarBonusInput!): ResultadoCompra!
+  registrarVenda(input: RegistrarVendaInput!): ResultadoVenda!
+}
+
+# ============================================
+# CLIENTE (Customer Module)
+# ============================================
+
+enum StatusCliente {
+  ATIVO
+  INATIVO
+  PENDENTE
+}
+
+enum TipoDocumentoCliente {
+  CPF
+  RG
+  CNH
+  PASSAPORTE
+}
+
+enum TipoEndereco {
+  RESIDENCIAL
+  COMERCIAL
+  CORRESPONDENCIA
+}
+
+enum TipoContatoCliente {
+  EMAIL
+  CELULAR
+  TELEFONE
+  WHATSAPP
+}
+
+type ClienteDocumento {
+  id: ID!
+  tipo: TipoDocumentoCliente!
+  numero: String!
+  principal: Boolean!
+  arquivoUrl: String
+  nomeArquivo: String
+}
+
+type ClienteEndereco {
+  id: ID!
+  tipo: TipoEndereco!
+  cep: String!
+  logradouro: String!
+  numero: String!
+  complemento: String
+  bairro: String!
+  cidade: String!
+  estado: String!
+  principal: Boolean!
+}
+
+type ClienteContato {
+  id: ID!
+  tipo: TipoContatoCliente!
+  valor: String!
+  principal: Boolean!
+}
+
+type Cliente {
+  id: ID!
+  nome: String!
+  sobrenome: String!
+  dataNascimento: String
+  documentos: [ClienteDocumento!]!
+  enderecos: [ClienteEndereco!]!
+  contatos: [ClienteContato!]!
+  status: StatusCliente!
+  observacoes: String
+  criadoEm: String
+  atualizadoEm: String
+}
+
+type ResumoClientes {
+  totalClientes: Int!
+  ativos: Int!
+  inativos: Int!
+  pendentes: Int!
+  clientes: [Cliente!]!
+}
+
+# Input types for Cliente operations
+
+input ClienteDocumentoInput {
+  tipo: TipoDocumentoCliente!
+  numero: String!
+  principal: Boolean!
+  arquivoUrl: String
+  nomeArquivo: String
+}
+
+input ClienteEnderecoInput {
+  tipo: TipoEndereco!
+  cep: String!
+  logradouro: String!
+  numero: String!
+  complemento: String
+  bairro: String!
+  cidade: String!
+  estado: String!
+  principal: Boolean!
+}
+
+input ClienteContatoInput {
+  tipo: TipoContatoCliente!
+  valor: String!
+  principal: Boolean!
+}
+
+input CriarClienteInput {
+  nome: String!
+  sobrenome: String!
+  dataNascimento: String
+  documentos: [ClienteDocumentoInput!]!
+  enderecos: [ClienteEnderecoInput!]!
+  contatos: [ClienteContatoInput!]!
+  status: StatusCliente
+  observacoes: String
+}
+
+input AtualizarClienteInput {
+  id: ID!
+  nome: String!
+  sobrenome: String!
+  dataNascimento: String
+  documentos: [ClienteDocumentoInput!]!
+  enderecos: [ClienteEnderecoInput!]!
+  contatos: [ClienteContatoInput!]!
+  status: StatusCliente
+  observacoes: String
+}
+
+# Extend Query type with Cliente operations
+extend type Query {
+  # Clientes
+  clientes: [Cliente!]!
+  clienteById(id: ID!): Cliente
+  clientesPorStatus(status: StatusCliente!): [Cliente!]!
+  resumoClientes: ResumoClientes!
+}
+
+# Extend Mutation type with Cliente operations
+extend type Mutation {
+  # Cliente operations
+  criarCliente(input: CriarClienteInput!): Cliente!
+  atualizarCliente(input: AtualizarClienteInput!): Cliente!
+  alterarStatusCliente(id: ID!, status: StatusCliente!): Cliente!
+  excluirCliente(id: ID!): Boolean!
+}
+
+# ============================================
+# ACCOUNT (Tenant/Organization) - DEV ONLY
+# ============================================
+
+type Account {
+  id: ID!
+  nome: String!
+  slug: String!
+  email: String!
+  status: String!
+  plan: String!
+}
+
+type DevUser {
+  id: ID!
+  email: String!
+  nome: String!
+  roles: [String!]!
+}
+
+# DEV queries for testing multi-tenant isolation
+extend type Query {
+  # Lista todos os accounts (apenas DEV)
+  devAccounts: [Account!]!
+  # Lista usuarios de um account (apenas DEV)
+  devUsersByAccount(accountId: ID!): [DevUser!]!
+}

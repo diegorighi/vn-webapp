@@ -1,0 +1,278 @@
+<article class="approvals">
+  <!-- Header -->
+  <header class="approvals__header">
+    <div class="approvals__title-area">
+      <h1 class="approvals__title">Aprovacoes</h1>
+      <p class="approvals__subtitle">Gerencie solicitacoes de alteracoes pendentes</p>
+    </div>
+  </header>
+
+  <!-- Summary Cards -->
+  <section class="approvals__summary">
+    <div class="summary-card summary-card--pending" (click)="setFilter('PENDING')">
+      <div class="summary-card__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <div class="summary-card__content">
+        <span class="summary-card__value">{{ summary().pending }}</span>
+        <span class="summary-card__label">Pendentes</span>
+      </div>
+    </div>
+
+    <div class="summary-card summary-card--approved" (click)="setFilter('APPROVED')">
+      <div class="summary-card__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+      </div>
+      <div class="summary-card__content">
+        <span class="summary-card__value">{{ summary().approvedToday }}</span>
+        <span class="summary-card__label">Aprovados Hoje</span>
+      </div>
+    </div>
+
+    <div class="summary-card summary-card--rejected" (click)="setFilter('REJECTED')">
+      <div class="summary-card__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </div>
+      <div class="summary-card__content">
+        <span class="summary-card__value">{{ summary().rejectedToday }}</span>
+        <span class="summary-card__label">Rejeitados Hoje</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Tabs -->
+  <nav class="approvals__tabs">
+    <button
+      class="tab"
+      [class.tab--active]="selectedFilter() === 'PENDING'"
+      (click)="setFilter('PENDING')">
+      Pendentes
+      @if (summary().pending > 0) {
+        <span class="tab__badge">{{ summary().pending }}</span>
+      }
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="selectedFilter() === 'APPROVED'"
+      (click)="setFilter('APPROVED')">
+      Aprovados
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="selectedFilter() === 'REJECTED'"
+      (click)="setFilter('REJECTED')">
+      Rejeitados
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="selectedFilter() === 'ALL'"
+      (click)="setFilter('ALL')">
+      Todos
+    </button>
+  </nav>
+
+  <!-- Approvals List -->
+  <section class="approvals__list">
+    @if (filteredApprovals().length === 0) {
+      <div class="approvals__empty">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z"/>
+        </svg>
+        <p>Nenhuma solicitacao encontrada</p>
+      </div>
+    } @else {
+      @for (approval of filteredApprovals(); track approval.id) {
+        <div class="approval-card" (click)="selectApproval(approval)">
+          <div class="approval-card__header">
+            <span class="approval-card__action" [class]="getActionClass(approval.actionType)">
+              {{ actionLabels[approval.actionType] }}
+            </span>
+            <span class="approval-card__entity">{{ entityLabels[approval.entityType] }}</span>
+            <span class="approval-card__status" [class]="getStatusClass(approval.status)">
+              {{ getStatusLabel(approval.status) }}
+            </span>
+          </div>
+
+          <h3 class="approval-card__title">{{ approval.entityName }}</h3>
+
+          <div class="approval-card__meta">
+            <div class="approval-card__user">
+              <span class="approval-card__avatar">{{ getInitials(approval.requestedBy.nome) }}</span>
+              <span class="approval-card__username">{{ approval.requestedBy.nome }}</span>
+            </div>
+            <span class="approval-card__time">{{ getTimeSince(approval.requestedAt) }}</span>
+          </div>
+
+          @if (approval.status === 'PENDING' && canApprove) {
+            <div class="approval-card__actions">
+              <button class="btn btn--approve" (click)="approve(approval); $event.stopPropagation()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                Aprovar
+              </button>
+              <button class="btn btn--reject" (click)="openRejectModal(approval); $event.stopPropagation()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+                Rejeitar
+              </button>
+            </div>
+          }
+        </div>
+      }
+    }
+  </section>
+
+  <!-- Detail Modal -->
+  @if (selectedApproval(); as approval) {
+    <div class="modal-overlay" (click)="closeDetail()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <header class="modal__header">
+          <h2 class="modal__title">Detalhes da Solicitacao</h2>
+          <button class="modal__close" (click)="closeDetail()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </header>
+
+        <div class="modal__content">
+          <div class="detail-section">
+            <h3 class="detail-section__title">Informacoes Gerais</h3>
+            <dl class="detail-grid">
+              <div class="detail-item">
+                <dt>Tipo</dt>
+                <dd>{{ entityLabels[approval.entityType] }}</dd>
+              </div>
+              <div class="detail-item">
+                <dt>Acao</dt>
+                <dd>
+                  <span [class]="'badge ' + getActionClass(approval.actionType)">
+                    {{ actionLabels[approval.actionType] }}
+                  </span>
+                </dd>
+              </div>
+              <div class="detail-item">
+                <dt>Status</dt>
+                <dd>
+                  <span [class]="'badge ' + getStatusClass(approval.status)">
+                    {{ getStatusLabel(approval.status) }}
+                  </span>
+                </dd>
+              </div>
+              <div class="detail-item">
+                <dt>Nome</dt>
+                <dd>{{ approval.entityName }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="detail-section__title">Solicitante</h3>
+            <div class="user-info">
+              <span class="user-info__avatar">{{ getInitials(approval.requestedBy.nome) }}</span>
+              <div class="user-info__details">
+                <span class="user-info__name">{{ approval.requestedBy.nome }}</span>
+                <span class="user-info__email">{{ approval.requestedBy.email }}</span>
+                <span class="user-info__date">{{ formatDate(approval.requestedAt) }}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (approval.reviewedBy) {
+            <div class="detail-section">
+              <h3 class="detail-section__title">Revisado por</h3>
+              <div class="user-info">
+                <span class="user-info__avatar">{{ getInitials(approval.reviewedBy.nome) }}</span>
+                <div class="user-info__details">
+                  <span class="user-info__name">{{ approval.reviewedBy.nome }}</span>
+                  <span class="user-info__email">{{ approval.reviewedBy.email }}</span>
+                  <span class="user-info__date">{{ formatDate(approval.reviewedAt!) }}</span>
+                </div>
+              </div>
+              @if (approval.rejectionReason) {
+                <div class="rejection-reason">
+                  <strong>Motivo da rejeicao:</strong>
+                  <p>{{ approval.rejectionReason }}</p>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="detail-section">
+            <h3 class="detail-section__title">Dados Propostos</h3>
+            <dl class="detail-grid detail-grid--data">
+              @for (item of formatDataForDisplay(approval.proposedData); track item.key) {
+                <div class="detail-item">
+                  <dt>{{ item.key }}</dt>
+                  <dd>{{ item.value }}</dd>
+                </div>
+              }
+            </dl>
+          </div>
+
+          @if (approval.originalData) {
+            <div class="detail-section">
+              <h3 class="detail-section__title">Dados Originais</h3>
+              <dl class="detail-grid detail-grid--data">
+                @for (item of formatDataForDisplay(approval.originalData); track item.key) {
+                  <div class="detail-item">
+                    <dt>{{ item.key }}</dt>
+                    <dd>{{ item.value }}</dd>
+                  </div>
+                }
+              </dl>
+            </div>
+          }
+        </div>
+
+        @if (approval.status === 'PENDING' && canApprove) {
+          <footer class="modal__footer">
+            <button class="btn btn--ghost" (click)="closeDetail()">Fechar</button>
+            <button class="btn btn--reject" (click)="openRejectModal(approval)">Rejeitar</button>
+            <button class="btn btn--approve" (click)="approve(approval)">Aprovar</button>
+          </footer>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Reject Modal -->
+  @if (showRejectModal()) {
+    <div class="modal-overlay" (click)="closeRejectModal()">
+      <div class="modal modal--small" (click)="$event.stopPropagation()">
+        <header class="modal__header">
+          <h2 class="modal__title">Rejeitar Solicitacao</h2>
+          <button class="modal__close" (click)="closeRejectModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </header>
+
+        <div class="modal__content">
+          <label class="form-label">Motivo da Rejeicao *</label>
+          <textarea
+            class="form-textarea"
+            rows="4"
+            placeholder="Informe o motivo da rejeicao..."
+            [value]="rejectReason()"
+            (input)="onRejectReasonChange($event)">
+          </textarea>
+        </div>
+
+        <footer class="modal__footer">
+          <button class="btn btn--ghost" (click)="closeRejectModal()">Cancelar</button>
+          <button class="btn btn--reject" (click)="confirmReject()">Confirmar Rejeicao</button>
+        </footer>
+      </div>
+    </div>
+  }
+</article>

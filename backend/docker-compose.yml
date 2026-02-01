@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # KEYCLOAK - Authorization Server (DEV/HML only)
+  # =============================================================================
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: vanessa-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+    command: start-dev --import-realm
+    volumes:
+      - ./infra/keycloak/realm-vanessa.json:/opt/keycloak/data/import/realm-vanessa.json:ro
+    ports:
+      - "8180:8080"
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - vanessa-network
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080;echo -e 'GET /health/ready HTTP/1.1\r\nhost: localhost\r\nConnection: close\r\n\r\n' >&3;cat <&3 | grep -q '200 OK'"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  # =============================================================================
+  # KEYCLOAK DATABASE
+  # =============================================================================
+  keycloak-db:
+    image: postgres:16-alpine
+    container_name: vanessa-keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    networks:
+      - vanessa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # =============================================================================
+  # APPLICATION DATABASE (DEV/HML)
+  # =============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: vanessa-postgres
+    environment:
+      POSTGRES_DB: vanessa
+      POSTGRES_USER: vanessa
+      POSTGRES_PASSWORD: vanessa123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - vanessa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vanessa -d vanessa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # =============================================================================
+  # TRAEFIK - API Gateway (optional, for full enterprise setup)
+  # =============================================================================
+  traefik:
+    image: traefik:v3.0
+    container_name: vanessa-traefik
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8081:8080"  # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - vanessa-network
+    profiles:
+      - gateway  # Only starts with: docker compose --profile gateway up
+
+networks:
+  vanessa-network:
+    driver: bridge
+
+volumes:
+  keycloak-db-data:
+  postgres-data:

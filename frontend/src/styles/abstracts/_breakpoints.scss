@@ -1,0 +1,63 @@
+// ============================================
+// BREAKPOINTS - MOBILE FIRST
+// ============================================
+// Estilos base sao para mobile (< 640px)
+// Media queries adicionam para telas maiores
+
+$breakpoints: (
+  'sm': 640px,    // Celular grande / tablet pequeno
+  'md': 768px,    // Tablet
+  'lg': 1024px,   // Desktop pequeno
+  'xl': 1280px,   // Desktop
+  '2xl': 1536px   // Desktop grande
+);
+
+// ============================================
+// MIXIN PRINCIPAL
+// ============================================
+@use 'sass:map';
+
+@mixin respond-to($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+
+  @if $value {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint `#{$breakpoint}` nao encontrado em $breakpoints.";
+  }
+}
+
+// ============================================
+// MIXINS ALIASES
+// ============================================
+@mixin mobile-only {
+  @media (max-width: 639px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include respond-to('md') {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include respond-to('lg') {
+    @content;
+  }
+}
+
+@mixin desktop-large {
+  @include respond-to('xl') {
+    @content;
+  }
+}

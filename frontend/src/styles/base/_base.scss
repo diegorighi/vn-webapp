@@ -1,0 +1,182 @@
+@use '../abstracts' as *;
+
+// ============================================
+// BASE - 62.5% PATTERN
+// ============================================
+// AIDEV-NOTE: Padrao 62.5% para facilitar calculos rem
+// O que: 1rem = 10px (16px * 0.625 = 10px)
+// Por que: Simplifica conversao mental (14px = 1.4rem, 20px = 2rem)
+// Impacto: Todos os valores devem usar rem, nunca px
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%; // 10px base
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  // Transição suave para mudanças de tema
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base; // 1.6rem = 16px
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  background-color: $color-bg-secondary;
+  letter-spacing: $letter-spacing-normal;
+
+  // Transições suaves para tema
+  transition: color 300ms ease, background-color 300ms ease;
+
+  // Textura sutil de papel premium
+  background-image:
+    radial-gradient(ellipse at 100% 0%, rgba(212, 163, 115, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 100%, rgba(14, 165, 233, 0.02) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+// ============================================
+// HEADINGS - Elegancia Editorial
+// ============================================
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-family-heading;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  letter-spacing: $letter-spacing-tight;
+}
+
+h1 {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-normal;
+
+  @include tablet {
+    font-size: $font-size-5xl;
+  }
+}
+
+h2 {
+  font-size: $font-size-3xl;
+
+  @include tablet {
+    font-size: $font-size-4xl;
+  }
+}
+
+h3 {
+  font-size: $font-size-2xl;
+
+  @include tablet {
+    font-size: $font-size-3xl;
+  }
+}
+
+h4 {
+  font-size: $font-size-xl;
+
+  @include tablet {
+    font-size: $font-size-2xl;
+  }
+}
+
+h5 {
+  font-size: $font-size-lg;
+  font-family: $font-family-base;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-normal;
+
+  @include tablet {
+    font-size: $font-size-xl;
+  }
+}
+
+h6 {
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+
+  @include tablet {
+    font-size: $font-size-sm;
+  }
+}
+
+// ============================================
+// LINKS
+// ============================================
+a {
+  color: $color-secondary-dark;
+  text-decoration: none;
+  transition: color $transition-fast;
+  position: relative;
+
+  &:hover {
+    color: $color-secondary;
+  }
+
+  @include focus-visible;
+}
+
+// ============================================
+// PARAGRAPHS
+// ============================================
+p {
+  margin-bottom: $spacing-md;
+  line-height: $line-height-relaxed;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ============================================
+// SELECTION - Dourado elegante
+// ============================================
+::selection {
+  background-color: $color-secondary;
+  color: $color-primary-dark;
+}
+
+// ============================================
+// SCROLLBAR PERSONALIZADA
+// ============================================
+::-webkit-scrollbar {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-bg-tertiary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-border-default;
+  border-radius: $border-radius-full;
+  border: 0.2rem solid $color-bg-tertiary;
+
+  &:hover {
+    background: $color-secondary;
+  }
+}
+
+// ============================================
+// FOCUS GLOBAL
+// ============================================
+:focus-visible {
+  outline: 0.2rem solid $color-secondary;
+  outline-offset: 0.2rem;
+}

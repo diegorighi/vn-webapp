@@ -1,0 +1,430 @@
+<article class="cliente-form">
+  <!-- Header -->
+  <header class="cliente-form__header">
+    <div class="cliente-form__title-area">
+      <h1 class="cliente-form__title">
+        @if (isViewMode()) {
+          Detalhes do Cliente
+        } @else if (isEditMode()) {
+          Editar Cliente
+        } @else {
+          Novo Cliente
+        }
+      </h1>
+      <p class="cliente-form__subtitle">
+        @if (isViewMode()) {
+          Visualize os dados do cliente
+        } @else if (isEditMode()) {
+          Atualize os dados do cliente
+        } @else {
+          Preencha os dados para cadastrar um novo cliente
+        }
+      </p>
+    </div>
+    <a routerLink="/app/clientes" class="btn btn--ghost">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+      Voltar
+    </a>
+  </header>
+
+  <!-- Form -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+
+    <!-- Dados Pessoais -->
+    <section class="form__section">
+      <h2 class="form__section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        Dados Pessoais
+      </h2>
+
+      <div class="form__grid form__grid--3">
+        <div class="form__field">
+          <label for="nome" class="form__label">Nome <span class="form__required">*</span></label>
+          <input type="text" id="nome" formControlName="nome" class="form__input"
+            [class.form__input--error]="isFieldInvalid('nome')" placeholder="Digite o nome">
+          @if (isFieldInvalid('nome')) {
+            <span class="form__error">{{ getFieldError('nome') }}</span>
+          }
+        </div>
+
+        <div class="form__field">
+          <label for="sobrenome" class="form__label">Sobrenome <span class="form__required">*</span></label>
+          <input type="text" id="sobrenome" formControlName="sobrenome" class="form__input"
+            [class.form__input--error]="isFieldInvalid('sobrenome')" placeholder="Digite o sobrenome">
+          @if (isFieldInvalid('sobrenome')) {
+            <span class="form__error">{{ getFieldError('sobrenome') }}</span>
+          }
+        </div>
+
+        <div class="form__field">
+          <label for="dataNascimento" class="form__label">Data de Nascimento <span class="form__required">*</span></label>
+          <input type="date" id="dataNascimento" formControlName="dataNascimento" class="form__input"
+            [class.form__input--error]="isFieldInvalid('dataNascimento')">
+          @if (isFieldInvalid('dataNascimento')) {
+            <span class="form__error">{{ getFieldError('dataNascimento') }}</span>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Documentos -->
+    <section class="form__section">
+      <div class="form__section-header">
+        <h2 class="form__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+          </svg>
+          Documentos
+          <span class="form__section-counter">{{ documentosArray.length }}/{{ limiteMax }}</span>
+        </h2>
+        @if (!isViewMode()) {
+          <button type="button" class="btn btn--outline btn--sm" (click)="addDocumento()"
+            [class.btn--disabled]="!canAddDocumento()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Adicionar
+          </button>
+        }
+      </div>
+
+      <div formArrayName="documentos" class="form__array">
+        @for (doc of documentosArray.controls; track $index; let i = $index) {
+          <div class="form__array-item" [formGroupName]="i">
+            <div class="form__array-item-header">
+              <span class="form__array-item-badge" [class.form__array-item-badge--principal]="doc.get('principal')?.value">
+                {{ doc.get('principal')?.value ? 'Principal' : 'Documento ' + (i + 1) }}
+              </span>
+              @if (!isViewMode()) {
+                <div class="form__array-item-actions">
+                  @if (!doc.get('principal')?.value) {
+                    <button type="button" class="btn-icon btn-icon--star" (click)="setDocumentoPrincipal(i)" title="Definir como principal">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    </button>
+                  }
+                  <button type="button" class="btn-icon btn-icon--delete" (click)="removeDocumento(i)"
+                    [disabled]="!canRemoveDocumento()" title="Remover documento">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="form__grid form__grid--2">
+              <div class="form__field">
+                <label [for]="'tipo-doc-' + i" class="form__label">Tipo <span class="form__required">*</span></label>
+                <select [id]="'tipo-doc-' + i" formControlName="tipo" class="form__select" (change)="onTipoDocumentoChange(i)">
+                  @for (tipo of tiposDocumento; track tipo.value) {
+                    <option [value]="tipo.value">{{ tipo.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form__field">
+                <label [for]="'numero-doc-' + i" class="form__label">Numero <span class="form__required">*</span></label>
+                <input type="text" [id]="'numero-doc-' + i" formControlName="numero" class="form__input"
+                  [class.form__input--error]="isArrayFieldInvalid('documentos', i, 'numero')"
+                  [placeholder]="getDocumentoPlaceholder(doc.get('tipo')?.value)"
+                  (input)="onDocumentoInput($event, i)">
+                @if (isArrayFieldInvalid('documentos', i, 'numero')) {
+                  <span class="form__error">{{ getArrayFieldError('documentos', i, 'numero') }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Upload de Documento Digitalizado -->
+            <div class="form__field form__field--full">
+              <label class="form__label">Documento Digitalizado</label>
+              
+              @if (!doc.get('arquivoUrl')?.value) {
+                <!-- Area de Upload -->
+                <div class="file-upload" [class.file-upload--disabled]="isViewMode()">
+                  <input 
+                    type="file" 
+                    [id]="'file-doc-' + i"
+                    class="file-upload__input"
+                    accept=".png,.jpg,.jpeg"
+                    (change)="onFileSelected($event, i)"
+                    [disabled]="isViewMode()">
+                  <label [for]="'file-doc-' + i" class="file-upload__label">
+                    <span class="file-upload__icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                      </svg>
+                    </span>
+                    <span class="file-upload__text">
+                      <strong>Clique para fazer upload</strong> ou arraste e solte
+                    </span>
+                    <span class="file-upload__hint">PNG, JPG ou JPEG (max. 10MB)</span>
+                  </label>
+                </div>
+              } @else {
+                <!-- Preview do Arquivo -->
+                <div class="file-preview">
+                  <div class="file-preview__thumbnail">
+                    <img [src]="doc.get('arquivoUrl')?.value" [alt]="doc.get('nomeArquivo')?.value">
+                  </div>
+                  <div class="file-preview__info">
+                    <span class="file-preview__name">{{ doc.get('nomeArquivo')?.value }}</span>
+                    <span class="file-preview__type">Imagem digitalizada</span>
+                  </div>
+                  @if (!isViewMode()) {
+                    <button 
+                      type="button" 
+                      class="file-preview__remove"
+                      (click)="removeArquivo(i)"
+                      title="Remover arquivo">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                      </svg>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Contatos -->
+    <section class="form__section">
+      <div class="form__section-header">
+        <h2 class="form__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          Contatos
+          <span class="form__section-counter">{{ contatosArray.length }}/{{ limiteMax }}</span>
+        </h2>
+        @if (!isViewMode()) {
+          <button type="button" class="btn btn--outline btn--sm" (click)="addContato()"
+            [class.btn--disabled]="!canAddContato()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Adicionar
+          </button>
+        }
+      </div>
+
+      <div formArrayName="contatos" class="form__array">
+        @for (contato of contatosArray.controls; track $index; let i = $index) {
+          <div class="form__array-item" [formGroupName]="i">
+            <div class="form__array-item-header">
+              <span class="form__array-item-badge" [class.form__array-item-badge--principal]="contato.get('principal')?.value">
+                {{ contato.get('principal')?.value ? 'Principal' : 'Contato ' + (i + 1) }}
+              </span>
+              @if (!isViewMode()) {
+                <div class="form__array-item-actions">
+                  @if (!contato.get('principal')?.value) {
+                    <button type="button" class="btn-icon btn-icon--star" (click)="setContatoPrincipal(i)" title="Definir como principal">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    </button>
+                  }
+                  <button type="button" class="btn-icon btn-icon--delete" (click)="removeContato(i)"
+                    [disabled]="!canRemoveContato()" title="Remover contato">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="form__grid form__grid--2">
+              <div class="form__field">
+                <label [for]="'tipo-contato-' + i" class="form__label">Tipo <span class="form__required">*</span></label>
+                <select [id]="'tipo-contato-' + i" formControlName="tipo" class="form__select" (change)="onTipoContatoChange(i)">
+                  @for (tipo of tiposContato; track tipo.value) {
+                    <option [value]="tipo.value">{{ tipo.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form__field">
+                <label [for]="'valor-contato-' + i" class="form__label">Valor <span class="form__required">*</span></label>
+                <input type="text" [id]="'valor-contato-' + i" formControlName="valor" class="form__input"
+                  [class.form__input--error]="isArrayFieldInvalid('contatos', i, 'valor')"
+                  [placeholder]="getContatoPlaceholder(contato.get('tipo')?.value)"
+                  (input)="onContatoInput($event, i)">
+                @if (isArrayFieldInvalid('contatos', i, 'valor')) {
+                  <span class="form__error">{{ getArrayFieldError('contatos', i, 'valor') }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Enderecos -->
+    <section class="form__section">
+      <div class="form__section-header">
+        <h2 class="form__section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          Enderecos
+          <span class="form__section-counter">{{ enderecosArray.length }}/{{ limiteMax }}</span>
+        </h2>
+        @if (!isViewMode()) {
+          <button type="button" class="btn btn--outline btn--sm" (click)="addEndereco()"
+            [class.btn--disabled]="!canAddEndereco()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Adicionar
+          </button>
+        }
+      </div>
+
+      <div formArrayName="enderecos" class="form__array">
+        @for (end of enderecosArray.controls; track $index; let i = $index) {
+          <div class="form__array-item" [formGroupName]="i">
+            <div class="form__array-item-header">
+              <span class="form__array-item-badge" [class.form__array-item-badge--principal]="end.get('principal')?.value">
+                {{ end.get('principal')?.value ? 'Principal' : 'Endereco ' + (i + 1) }}
+              </span>
+              @if (!isViewMode()) {
+                <div class="form__array-item-actions">
+                  @if (!end.get('principal')?.value) {
+                    <button type="button" class="btn-icon btn-icon--star" (click)="setEnderecoPrincipal(i)" title="Definir como principal">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    </button>
+                  }
+                  <button type="button" class="btn-icon btn-icon--delete" (click)="removeEndereco(i)"
+                    [disabled]="!canRemoveEndereco()" title="Remover endereco">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="form__grid">
+              <div class="form__field form__field--small">
+                <label [for]="'tipo-end-' + i" class="form__label">Tipo <span class="form__required">*</span></label>
+                <select [id]="'tipo-end-' + i" formControlName="tipo" class="form__select">
+                  @for (tipo of tiposEndereco; track tipo.value) {
+                    <option [value]="tipo.value">{{ tipo.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form__field form__field--small">
+                <label [for]="'cep-' + i" class="form__label">CEP <span class="form__required">*</span></label>
+                <div class="form__input-wrapper">
+                  <input type="text" [id]="'cep-' + i" formControlName="cep" class="form__input"
+                    [class.form__input--error]="isArrayFieldInvalid('enderecos', i, 'cep')"
+                    [class.form__input--loading]="cepLoadingIndex() === i"
+                    placeholder="00000-000" (input)="onCepInput($event, i)">
+                  @if (cepLoadingIndex() === i) {
+                    <span class="form__input-spinner"></span>
+                  }
+                </div>
+                @if (isArrayFieldInvalid('enderecos', i, 'cep')) {
+                  <span class="form__error">{{ getArrayFieldError('enderecos', i, 'cep') }}</span>
+                }
+              </div>
+
+              <div class="form__field form__field--large">
+                <label [for]="'logradouro-' + i" class="form__label">Logradouro <span class="form__required">*</span></label>
+                <input type="text" [id]="'logradouro-' + i" formControlName="logradouro"
+                  class="form__input form__input--readonly" placeholder="Preenchido pelo CEP" readonly>
+              </div>
+
+              <div class="form__field form__field--small">
+                <label [for]="'numero-' + i" class="form__label">Numero <span class="form__required">*</span></label>
+                <input type="text" [id]="'numero-' + i" formControlName="numero" class="form__input"
+                  [class.form__input--error]="isArrayFieldInvalid('enderecos', i, 'numero')" placeholder="123">
+                @if (isArrayFieldInvalid('enderecos', i, 'numero')) {
+                  <span class="form__error">{{ getArrayFieldError('enderecos', i, 'numero') }}</span>
+                }
+              </div>
+
+              <div class="form__field">
+                <label [for]="'complemento-' + i" class="form__label">Complemento</label>
+                <input type="text" [id]="'complemento-' + i" formControlName="complemento" class="form__input" placeholder="Apto, Bloco, etc.">
+              </div>
+
+              <div class="form__field">
+                <label [for]="'bairro-' + i" class="form__label">Bairro <span class="form__required">*</span></label>
+                <input type="text" [id]="'bairro-' + i" formControlName="bairro"
+                  class="form__input form__input--readonly" placeholder="Preenchido pelo CEP" readonly>
+              </div>
+
+              <div class="form__field">
+                <label [for]="'cidade-' + i" class="form__label">Cidade <span class="form__required">*</span></label>
+                <input type="text" [id]="'cidade-' + i" formControlName="cidade"
+                  class="form__input form__input--readonly" placeholder="Preenchido pelo CEP" readonly>
+              </div>
+
+              <div class="form__field form__field--small">
+                <label [for]="'estado-' + i" class="form__label">UF <span class="form__required">*</span></label>
+                <input type="text" [id]="'estado-' + i" formControlName="estado"
+                  class="form__input form__input--readonly" placeholder="UF" readonly>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Observacoes -->
+    <section class="form__section">
+      <h2 class="form__section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        Observacoes
+      </h2>
+
+      <div class="form__field form__field--full">
+        <label for="observacoes" class="form__label">Observacoes</label>
+        <textarea id="observacoes" formControlName="observacoes" class="form__textarea" rows="4"
+          placeholder="Informacoes adicionais sobre o cliente..."></textarea>
+        <span class="form__hint">Maximo 500 caracteres</span>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <footer class="form__actions">
+      @if (isViewMode()) {
+        <a routerLink="/app/clientes" class="btn btn--ghost">Voltar</a>
+        <a [routerLink]="['/clientes', clienteId(), 'editar']" class="btn btn--primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+          </svg>
+          Editar Cliente
+        </a>
+      } @else {
+        <a routerLink="/app/clientes" class="btn btn--ghost">Cancelar</a>
+        <button type="submit" class="btn btn--primary" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <span class="btn__spinner"></span>
+            Salvando...
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+            </svg>
+            {{ isEditMode() ? 'Salvar Alteracoes' : 'Cadastrar Cliente' }}
+          }
+        </button>
+      }
+    </footer>
+  </form>
+</article>

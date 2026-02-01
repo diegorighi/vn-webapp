@@ -1,0 +1,53 @@
+// Main entry point for global styles
+@use 'styles/main';
+
+// ============================================
+// DEV MODE - Global offset for dev banner
+// ============================================
+$dev-banner-height: 4rem;
+$navbar-height: 6.4rem;
+
+// Detecta se a dev-banner existe e aplica offset global
+body:has(.dev-banner) {
+  // Landing page offset
+  .landing {
+    padding-top: $dev-banner-height;
+
+    .nav {
+      top: $dev-banner-height !important;
+    }
+
+    .hero {
+      margin-top: 0;
+    }
+  }
+
+  // Login page offset
+  .login-page {
+    padding-top: $dev-banner-height;
+  }
+}
+
+.dev-mode-active {
+  // Offset para navbar - fica abaixo da dev banner
+  .navbar {
+    top: $dev-banner-height !important;
+    z-index: 999 !important;
+  }
+
+  // Offset para aside menu - fica abaixo da navbar
+  .aside-menu {
+    top: calc(#{$navbar-height} + #{$dev-banner-height}) !important;
+    z-index: 998 !important;
+  }
+
+  // Offset para aside overlay (mobile)
+  .aside-overlay {
+    top: calc(#{$navbar-height} + #{$dev-banner-height}) !important;
+  }
+
+  // Offset para main wrapper
+  .main-wrapper {
+    padding-top: calc(#{$navbar-height} + #{$dev-banner-height}) !important;
+  }
+}

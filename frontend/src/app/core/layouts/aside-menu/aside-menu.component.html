@@ -1,0 +1,141 @@
+<!-- Overlay for mobile -->
+@if (isMobile() && isOpen()) {
+  <div
+    class="aside-overlay"
+    (click)="closeSidebar()"
+    (keydown.escape)="closeSidebar()"
+    aria-hidden="true"
+    data-testid="aside-overlay">
+  </div>
+}
+
+<aside
+  id="aside-menu"
+  class="aside-menu"
+  [class.aside-menu--open]="isOpen()"
+  [class.aside-menu--mobile]="isMobile()"
+  role="navigation"
+  aria-label="Menu lateral"
+  data-testid="aside-menu">
+
+  <nav class="aside-menu__nav">
+    <ul class="aside-menu__list" role="menubar">
+      @for (item of menuItems(); track item.label) {
+        <li class="aside-menu__item" role="none">
+          @if (item.children && item.children.length > 0) {
+            <!-- Menu item with children -->
+            <button
+              type="button"
+              class="aside-menu__link aside-menu__link--parent"
+              [class.aside-menu__link--expanded]="item.expanded"
+              (click)="toggleItem(item, $event)"
+              role="menuitem"
+              [attr.aria-expanded]="item.expanded"
+              aria-haspopup="true"
+              [attr.data-testid]="'menu-' + item.label.toLowerCase()">
+              <span class="aside-menu__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path [attr.d]="getIcon(item.icon)"/>
+                </svg>
+              </span>
+              <span class="aside-menu__label">{{ item.label }}</span>
+              <span class="aside-menu__arrow" [class.aside-menu__arrow--rotated]="item.expanded">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path [attr.d]="getIcon('expand_more')"/>
+                </svg>
+              </span>
+            </button>
+
+            <!-- Submenu Level 1 (sempre no DOM, controlado por classe) -->
+            <ul class="aside-menu__submenu" [class.aside-menu__submenu--open]="item.expanded" role="menu">
+              @for (child of item.children; track child.label) {
+                <li class="aside-menu__subitem" role="none">
+                  @if (child.children && child.children.length > 0) {
+                    <!-- Nested submenu (Level 2) -->
+                    <button
+                      type="button"
+                      class="aside-menu__sublink aside-menu__sublink--parent"
+                      [class.aside-menu__sublink--expanded]="child.expanded"
+                      (click)="toggleItem(child, $event)"
+                      role="menuitem"
+                      [attr.aria-expanded]="child.expanded"
+                      aria-haspopup="true"
+                      [attr.data-testid]="'submenu-' + child.label.toLowerCase()">
+                      <span class="aside-menu__subicon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path [attr.d]="getIcon(child.icon)"/>
+                        </svg>
+                      </span>
+                      <span class="aside-menu__sublabel">{{ child.label }}</span>
+                      <span class="aside-menu__subarrow" [class.aside-menu__subarrow--rotated]="child.expanded">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path [attr.d]="getIcon('expand_more')"/>
+                        </svg>
+                      </span>
+                    </button>
+
+                    <!-- Nested submenu items (Level 3) -->
+                    <ul class="aside-menu__nested-submenu" [class.aside-menu__nested-submenu--open]="child.expanded" role="menu">
+                      @for (nested of child.children; track nested.label) {
+                        <li class="aside-menu__nested-item" role="none">
+                          <a
+                            [routerLink]="nested.route"
+                            routerLinkActive="aside-menu__nested-link--active"
+                            [routerLinkActiveOptions]="{ exact: true }"
+                            class="aside-menu__nested-link"
+                            role="menuitem"
+                            (click)="onMenuItemClick()"
+                            [attr.data-testid]="'nested-' + nested.label.toLowerCase()">
+                            <span class="aside-menu__nested-icon">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path [attr.d]="getIcon(nested.icon)"/>
+                              </svg>
+                            </span>
+                            <span class="aside-menu__nested-label">{{ nested.label }}</span>
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <!-- Direct submenu link -->
+                    <a
+                      [routerLink]="child.route"
+                      routerLinkActive="aside-menu__sublink--active"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      class="aside-menu__sublink"
+                      role="menuitem"
+                      (click)="onMenuItemClick()"
+                      [attr.data-testid]="'submenu-' + child.label.toLowerCase()">
+                      <span class="aside-menu__subicon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path [attr.d]="getIcon(child.icon)"/>
+                        </svg>
+                      </span>
+                      <span class="aside-menu__sublabel">{{ child.label }}</span>
+                    </a>
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            <!-- Menu item without children -->
+            <a
+              [routerLink]="item.route"
+              routerLinkActive="aside-menu__link--active"
+              class="aside-menu__link"
+              role="menuitem"
+              (click)="onMenuItemClick()"
+              [attr.data-testid]="'menu-' + item.label.toLowerCase()">
+              <span class="aside-menu__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path [attr.d]="getIcon(item.icon)"/>
+                </svg>
+              </span>
+              <span class="aside-menu__label">{{ item.label }}</span>
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </nav>
+</aside>

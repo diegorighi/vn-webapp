@@ -1,0 +1,25 @@
+<a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+
+<app-toast />
+
+<div [class.dev-mode-active]="isDevMode">
+  <app-navbar />
+
+  <app-aside-menu />
+
+  <div
+    class="main-wrapper"
+    [class.main-wrapper--sidebar-open]="isSidebarOpen()">
+
+    <main
+      id="main-content"
+      class="main-content"
+      role="main"
+      tabindex="-1">
+      <app-breadcrumbs />
+      <router-outlet />
+    </main>
+
+    <app-footer />
+  </div>
+</div>

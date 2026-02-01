@@ -1,0 +1,90 @@
+@use '../../../../styles/abstracts' as *;
+
+// ============================================
+// BREADCRUMBS - Horizonte Dourado
+// ============================================
+.breadcrumbs {
+  margin-bottom: $spacing-lg;
+  animation: fadeInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+  }
+
+  &__separator {
+    display: flex;
+    align-items: center;
+    color: $color-text-muted;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
+
+  &__icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-muted;
+    text-decoration: none;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-secondary-dark;
+      background-color: rgba(212, 163, 115, 0.1);
+    }
+
+    &:focus-visible {
+      outline: $border-width-md solid $color-secondary;
+      outline-offset: 0.2rem;
+    }
+
+    &--home {
+      color: $color-text-secondary;
+
+      &:hover {
+        color: $color-secondary-dark;
+
+        .breadcrumbs__icon {
+          transform: scale(1.1);
+        }
+      }
+
+      .breadcrumbs__icon {
+        transition: transform $transition-fast;
+      }
+    }
+  }
+
+  &__current {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    padding: $spacing-xs $spacing-sm;
+    background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, rgba(212, 163, 115, 0.05) 100%);
+    border-radius: $border-radius-md;
+  }
+}

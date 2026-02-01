@@ -1,0 +1,95 @@
+# ==============================================================================
+# LLM / AI Assistant Configuration (local only)
+# ==============================================================================
+.claude/
+.claude*
+CLAUDE.md
+**/CLAUDE.md
+.cursorrules
+.aider*
+.continue/
+copilot-*
+.github/copilot/
+
+# ==============================================================================
+# Documentation (keep locally, use wiki/confluence for shared docs)
+# ==============================================================================
+*.md
+!README.md
+!CHANGELOG.md
+!LICENSE.md
+docs/code-review/
+
+# ==============================================================================
+# IDE and Editor
+# ==============================================================================
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ==============================================================================
+# Build and Dependencies
+# ==============================================================================
+# Java/Gradle
+build/
+target/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+out/
+
+# Node/NPM
+node_modules/
+dist/
+.angular/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==============================================================================
+# Environment and Secrets
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.local
+application-local.yml
+application-local.properties
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.jks
+
+# ==============================================================================
+# Logs and Temp Files
+# ==============================================================================
+logs/
+*.log
+tmp/
+temp/
+*.tmp
+*.bak
+
+# ==============================================================================
+# OS Files
+# ==============================================================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==============================================================================
+# Test and Coverage
+# ==============================================================================
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+playwright-report/

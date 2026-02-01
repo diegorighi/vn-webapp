@@ -1,0 +1,16 @@
+// ============================================
+// MAIN STYLESHEET
+// Vá Nessa Viagem Backoffice
+// ============================================
+
+// Abstracts (variables, mixins, functions)
+@use 'abstracts' as *;
+
+// Base styles
+@use 'base';
+
+// Layout styles
+@use 'layouts';
+
+// Component styles
+@use 'components';

@@ -1,0 +1,742 @@
+@use '../../../styles/abstracts' as *;
+
+// ============================================
+// DASHBOARD - Professional SaaS Design
+// ============================================
+.dashboard {
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding-bottom: $spacing-xl;
+
+  // ==========================================
+  // HEADER
+  // ==========================================
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-lg;
+    border-bottom: 0.1rem solid $color-border-light;
+    animation: fadeInUp 0.5s ease-out;
+
+    @include tablet {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  &__header-content {
+    flex: 1;
+  }
+
+  &__header-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__title {
+    font-family: $font-family-heading;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-xs;
+    letter-spacing: $letter-spacing-tight;
+
+    @include tablet {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $color-text-muted;
+    margin: 0;
+    font-weight: $font-weight-normal;
+  }
+
+  // ==========================================
+  // STATS GRID
+  // ==========================================
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    animation: fadeInUp 0.5s ease-out 0.1s backwards;
+
+    @include tablet {
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-lg;
+    }
+  }
+
+  // ==========================================
+  // MAIN GRID LAYOUT
+  // ==========================================
+  &__grid {
+    display: grid;
+    gap: $spacing-xl;
+
+    @include desktop {
+      grid-template-columns: 1fr 32rem;
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  // ==========================================
+  // SECTIONS
+  // ==========================================
+  &__section {
+    background: $color-bg-primary;
+    border: 0.1rem solid $color-border-light;
+    border-radius: $border-radius-xl;
+    padding: $spacing-lg;
+    box-shadow: $shadow-card;
+    animation: fadeInUp 0.5s ease-out 0.2s backwards;
+
+    @include tablet {
+      padding: $spacing-xl;
+    }
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-family: $font-family-heading;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-lg;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      color: $color-secondary;
+    }
+  }
+
+  &__view-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-xs;
+    margin-top: $spacing-lg;
+    padding-top: $spacing-lg;
+    border-top: 0.1rem solid $color-border-light;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-secondary-dark;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      transition: transform $transition-fast;
+    }
+
+    &:hover {
+      color: $color-secondary;
+
+      svg {
+        transform: translateX(0.3rem);
+      }
+    }
+  }
+}
+
+// ============================================
+// STAT CARD - Modern Design
+// ============================================
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-primary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  @include tablet {
+    padding: $spacing-lg;
+  }
+
+  &:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: $shadow-md;
+    border-color: rgba(212, 163, 115, 0.3);
+  }
+
+  // Decorative gradient corner
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8rem;
+    height: 8rem;
+    background: radial-gradient(
+      circle at 100% 0%,
+      rgba(212, 163, 115, 0.06) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: $border-radius-lg;
+    flex-shrink: 0;
+    transition: all $transition-normal;
+
+    @include tablet {
+      width: 5.2rem;
+      height: 5.2rem;
+    }
+
+    svg {
+      width: 2.2rem;
+      height: 2.2rem;
+
+      @include tablet {
+        width: 2.6rem;
+        height: 2.6rem;
+      }
+    }
+
+    &--gold {
+      background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, rgba(212, 163, 115, 0.05) 100%);
+      color: $color-secondary-dark;
+    }
+
+    &--blue {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0.05) 100%);
+      color: $color-accent-dark;
+    }
+
+    &--green {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+      color: $color-success-dark;
+    }
+
+    &--purple {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+      color: #7c3aed;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__value {
+    font-family: $font-family-heading;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-xs;
+    line-height: 1;
+
+    @include tablet {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    margin: 0;
+    font-weight: $font-weight-medium;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @include tablet {
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__trend {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-full;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    &--positive {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.04) 100%);
+      color: $color-success-dark;
+    }
+
+    &--negative {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.04) 100%);
+      color: $color-error-dark;
+    }
+  }
+}
+
+// ============================================
+// QUICK ACTIONS
+// ============================================
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+
+  @include tablet {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-lg $spacing-md;
+  background: $color-bg-secondary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-lg;
+  text-decoration: none;
+  transition: all $transition-normal;
+  position: relative;
+
+  &:hover {
+    background: $color-bg-primary;
+    border-color: $color-secondary;
+    transform: translateY(-0.2rem);
+    box-shadow: $shadow-md;
+
+    .quick-action__icon {
+      transform: scale(1.1);
+    }
+
+    .quick-action__arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 5.2rem;
+    height: 5.2rem;
+    border-radius: $border-radius-xl;
+    transition: all $transition-normal;
+
+    svg {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    &--primary {
+      background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+      color: $color-text-inverse;
+    }
+
+    &--success {
+      background: linear-gradient(135deg, $color-success 0%, $color-success-dark 100%);
+      color: $color-text-inverse;
+    }
+
+    &--info {
+      background: linear-gradient(135deg, $color-accent 0%, $color-accent-dark 100%);
+      color: $color-text-inverse;
+    }
+
+    &--warning {
+      background: linear-gradient(135deg, $color-warning 0%, $color-warning-dark 100%);
+      color: $color-text-inverse;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    text-align: center;
+  }
+
+  &__arrow {
+    position: absolute;
+    right: $spacing-sm;
+    top: 50%;
+    transform: translateX(-0.5rem);
+    opacity: 0;
+    transition: all $transition-fast;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      color: $color-secondary;
+    }
+  }
+}
+
+// ============================================
+// CHART SECTION
+// ============================================
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+
+  @include tablet {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.chart-tabs {
+  display: flex;
+  gap: $spacing-xs;
+  background: $color-bg-secondary;
+  padding: 0.4rem;
+  border-radius: $border-radius-lg;
+
+  &__btn {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    &--active {
+      color: $color-text-primary;
+      background: $color-bg-primary;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+.chart-container {
+  padding: $spacing-md 0;
+}
+
+.chart-placeholder {
+  height: 24rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  &__bars {
+    display: flex;
+    align-items: flex-end;
+    gap: $spacing-md;
+    height: 100%;
+    width: 100%;
+    padding: 0 $spacing-md;
+  }
+
+  &__bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  &__bar {
+    width: 100%;
+    max-width: 6rem;
+    background: linear-gradient(180deg, $color-secondary 0%, $color-secondary-dark 100%);
+    border-radius: $border-radius-md $border-radius-md 0 0;
+    position: relative;
+    transition: all $transition-normal;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(1.1);
+
+      .chart-placeholder__tooltip {
+        opacity: 1;
+        transform: translate(-50%, -1rem);
+      }
+    }
+
+    &--active {
+      background: linear-gradient(180deg, $color-accent 0%, $color-accent-dark 100%);
+      box-shadow: 0 0 2rem rgba(14, 165, 233, 0.3);
+    }
+  }
+
+  &__tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: $spacing-xs $spacing-sm;
+    background: $color-primary;
+    color: $color-text-inverse;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    border-radius: $border-radius-md;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all $transition-fast;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 0.4rem solid transparent;
+      border-top-color: $color-primary;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// ============================================
+// ACTIVITY LIST
+// ============================================
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-secondary;
+  border-radius: $border-radius-lg;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $color-bg-tertiary;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: $border-radius-md;
+    flex-shrink: 0;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &--success {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.04) 100%);
+      color: $color-success-dark;
+    }
+
+    &--info {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(14, 165, 233, 0.04) 100%);
+      color: $color-accent-dark;
+    }
+
+    &--warning {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.04) 100%);
+      color: $color-warning-dark;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-xs;
+    line-height: 1.5;
+  }
+
+  &__time {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+}
+
+// ============================================
+// TRIP LIST
+// ============================================
+.trip-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.trip-card {
+  padding: $spacing-md;
+  background: $color-bg-secondary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-lg;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-secondary;
+    background: $color-bg-primary;
+    box-shadow: $shadow-sm;
+  }
+
+  &__route {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  &__origin,
+  &__destination {
+    font-family: $font-family-heading;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__arrow {
+    @include flex-center;
+    width: 2.8rem;
+    height: 2.8rem;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    border-radius: $border-radius-full;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      color: $color-text-inverse;
+    }
+  }
+
+  &__details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $spacing-md;
+    border-top: 0.1rem solid $color-border-light;
+  }
+
+  &__date {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    font-weight: $font-weight-medium;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      color: $color-secondary;
+    }
+  }
+
+  &__client {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+  }
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border: none;
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  &--outline {
+    background: transparent;
+    border: 0.1rem solid $color-border-default;
+    color: $color-text-secondary;
+
+    &:hover {
+      border-color: $color-secondary;
+      color: $color-secondary-dark;
+      background: rgba(212, 163, 115, 0.04);
+    }
+  }
+
+  &--sm {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

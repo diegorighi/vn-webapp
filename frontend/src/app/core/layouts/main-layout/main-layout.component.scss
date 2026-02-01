@@ -1,0 +1,131 @@
+@use '../../../../styles/abstracts' as *;
+
+// ============================================
+// DEV MODE OFFSET
+// ============================================
+$dev-banner-height: 4rem;
+
+.dev-mode-active {
+  // Offset para navbar
+  :global(app-navbar),
+  ::ng-deep app-navbar {
+    .navbar {
+      top: $dev-banner-height;
+    }
+  }
+
+  // Offset para aside menu
+  :global(app-aside-menu),
+  ::ng-deep app-aside-menu {
+    .aside {
+      top: $dev-banner-height;
+      height: calc(100vh - #{$dev-banner-height});
+    }
+  }
+
+  // Offset para main wrapper
+  .main-wrapper {
+    padding-top: calc(#{$navbar-height} + #{$dev-banner-height});
+  }
+
+  .main-content {
+    min-height: calc(100vh - #{$navbar-height} - #{$footer-height} - #{$dev-banner-height});
+  }
+}
+
+// ============================================
+// SKIP LINK (ACCESSIBILITY)
+// ============================================
+.skip-link {
+  position: absolute;
+  top: -5rem;
+  left: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  background: $gradient-gold;
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-sm;
+  border-radius: $border-radius-lg;
+  z-index: $z-index-tooltip;
+  transition: top $transition-fast;
+  text-decoration: none;
+  box-shadow: $shadow-lg;
+
+  &:focus {
+    top: $spacing-md;
+  }
+}
+
+// ============================================
+// MAIN WRAPPER - Horizonte Dourado
+// ============================================
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: $navbar-height;
+  margin-left: 0;
+  transition: margin-left $transition-smooth;
+
+  &--sidebar-open {
+    @include desktop {
+      margin-left: $aside-width;
+    }
+  }
+}
+
+// ============================================
+// MAIN CONTENT
+// ============================================
+.main-content {
+  flex: 1;
+  padding: $spacing-lg;
+  background-color: $color-bg-secondary;
+  min-height: calc(100vh - #{$navbar-height} - #{$footer-height});
+  position: relative;
+
+  // Textura atmosferica sutil
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30rem;
+    background: linear-gradient(
+      180deg,
+      rgba(212, 163, 115, 0.03) 0%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  // Decoracao de canto sutil
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: $footer-height;
+    right: 0;
+    width: 40rem;
+    height: 40rem;
+    background: radial-gradient(
+      ellipse at 100% 100%,
+      rgba(14, 165, 233, 0.02) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  @include tablet {
+    padding: $spacing-xl;
+  }
+
+  @include desktop {
+    padding: $spacing-xl $spacing-2xl;
+  }
+
+  // Remove outline when focused via skip link
+  &:focus {
+    outline: none;
+  }
+}

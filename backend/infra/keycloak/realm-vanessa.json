@@ -1,0 +1,344 @@
+{
+  "realm": "vanessa",
+  "enabled": true,
+  "displayName": "Vanessa Viagem",
+  "displayNameHtml": "<strong>Vanessa Viagem</strong>",
+  "loginTheme": "keycloak",
+  "accountTheme": "keycloak.v2",
+  "adminTheme": "keycloak.v2",
+  "emailTheme": "keycloak",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": true,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 5,
+  "accessTokenLifespan": 3600,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "accessCodeLifespan": 60,
+  "accessCodeLifespanUserAction": 300,
+  "accessCodeLifespanLogin": 1800,
+  "actionTokenGeneratedByAdminLifespan": 43200,
+  "actionTokenGeneratedByUserLifespan": 300,
+  "roles": {
+    "realm": [
+      {
+        "name": "ROOT",
+        "description": "Super administrador com controle total",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {
+          "can_approve": ["true"],
+          "can_insert": ["true"],
+          "can_update": ["true"],
+          "can_delete": ["true"],
+          "requires_approval": ["false"]
+        }
+      },
+      {
+        "name": "ADMIN",
+        "description": "Administrador que pode gerenciar usuarios e aprovar alteracoes",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {
+          "can_approve": ["true"],
+          "can_insert": ["true"],
+          "can_update": ["true"],
+          "can_delete": ["true"],
+          "requires_approval": ["false"]
+        }
+      },
+      {
+        "name": "MANAGER",
+        "description": "Gerente que pode inserir e atualizar dados com aprovacao",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {
+          "can_approve": ["false"],
+          "can_insert": ["true"],
+          "can_update": ["true"],
+          "can_delete": ["false"],
+          "requires_approval": ["true"]
+        }
+      },
+      {
+        "name": "OPERATOR",
+        "description": "Operador que pode apenas inserir dados com aprovacao",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {
+          "can_approve": ["false"],
+          "can_insert": ["true"],
+          "can_update": ["false"],
+          "can_delete": ["false"],
+          "requires_approval": ["true"]
+        }
+      },
+      {
+        "name": "VIEWER",
+        "description": "Visualizador com acesso somente leitura",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {
+          "can_approve": ["false"],
+          "can_insert": ["false"],
+          "can_update": ["false"],
+          "can_delete": ["false"],
+          "requires_approval": ["true"]
+        }
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "backoffice-web",
+      "name": "Backoffice Web Application",
+      "description": "Angular SPA frontend",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:8080/*",
+        "https://vanessaviagem.com.br/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://localhost:8080",
+        "https://vanessaviagem.com.br"
+      ],
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "access.token.lifespan": "3600"
+      },
+      "protocolMappers": [
+        {
+          "name": "tenant_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "permissions",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "permissions",
+            "claim.name": "permissions",
+            "jsonType.label": "JSON",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "true"
+          }
+        },
+        {
+          "name": "can_approve",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "can_approve",
+            "claim.name": "can_approve",
+            "jsonType.label": "boolean",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "backoffice-api",
+      "name": "Backoffice API",
+      "description": "Backend API client for service-to-service",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "backoffice-api-secret",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "root@vanessaviagem.com.br",
+      "email": "root@vanessaviagem.com.br",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Usuario",
+      "lastName": "Root",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "senha123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ROOT"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "user_id": ["20000000-0000-0000-0000-000000000001"],
+        "can_approve": ["true"],
+        "permissions": ["*"]
+      }
+    },
+    {
+      "username": "admin@vanessaviagem.com.br",
+      "email": "admin@vanessaviagem.com.br",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Usuario",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "senha123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "user_id": ["20000000-0000-0000-0000-000000000002"],
+        "can_approve": ["true"],
+        "permissions": ["users:read", "users:write", "data:read", "data:write", "data:delete", "approvals:manage"]
+      }
+    },
+    {
+      "username": "manager@vanessaviagem.com.br",
+      "email": "manager@vanessaviagem.com.br",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Usuario",
+      "lastName": "Manager",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "senha123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["MANAGER"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "user_id": ["20000000-0000-0000-0000-000000000003"],
+        "can_approve": ["false"],
+        "permissions": ["data:read", "data:write:pending", "reports:read"]
+      }
+    },
+    {
+      "username": "operator@vanessaviagem.com.br",
+      "email": "operator@vanessaviagem.com.br",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Usuario",
+      "lastName": "Operator",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "senha123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["OPERATOR"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "user_id": ["20000000-0000-0000-0000-000000000004"],
+        "can_approve": ["false"],
+        "permissions": ["data:read", "data:insert:pending"]
+      }
+    },
+    {
+      "username": "viewer@vanessaviagem.com.br",
+      "email": "viewer@vanessaviagem.com.br",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Usuario",
+      "lastName": "Viewer",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "senha123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["VIEWER"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "user_id": ["20000000-0000-0000-0000-000000000005"],
+        "can_approve": ["false"],
+        "permissions": ["data:read"]
+      }
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "vanessa-scope",
+      "description": "Vanessa Viagem custom claims",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "false"
+      },
+      "protocolMappers": [
+        {
+          "name": "audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "backoffice-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ]
+}

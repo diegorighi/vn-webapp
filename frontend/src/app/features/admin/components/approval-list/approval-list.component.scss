@@ -1,0 +1,588 @@
+@use '../../../../../styles/abstracts' as *;
+
+.approvals {
+  max-width: 120rem;
+  margin: 0 auto;
+  animation: fadeInUp 0.4s ease-out;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+  }
+
+  &__title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-xs;
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $color-text-muted;
+    margin: 0;
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-xl;
+    border-bottom: 0.1rem solid $color-border-light;
+    padding-bottom: $spacing-sm;
+    overflow-x: auto;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-3xl;
+    background: $color-bg-secondary;
+    border-radius: $border-radius-xl;
+    color: $color-text-muted;
+
+    svg {
+      width: 6rem;
+      height: 6rem;
+      opacity: 0.4;
+      margin-bottom: $spacing-md;
+    }
+
+    p {
+      margin: 0;
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// Summary Cards
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  padding: $spacing-lg;
+  background: $color-bg-primary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-xl;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: $shadow-lg;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: $border-radius-lg;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__value {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    margin-top: $spacing-xs;
+  }
+
+  &--pending .summary-card__icon {
+    background: rgba($color-warning, 0.15);
+    color: $color-warning-dark;
+  }
+
+  &--approved .summary-card__icon {
+    background: rgba($color-success, 0.15);
+    color: $color-success-dark;
+  }
+
+  &--rejected .summary-card__icon {
+    background: rgba($color-error, 0.15);
+    color: $color-error-dark;
+  }
+}
+
+// Tabs
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  background: transparent;
+  border: none;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  cursor: pointer;
+  border-radius: $border-radius-md;
+  transition: all $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-bg-secondary;
+    color: $color-text-primary;
+  }
+
+  &--active {
+    background: rgba($color-secondary, 0.1);
+    color: $color-secondary-dark;
+  }
+
+  &__badge {
+    @include flex-center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 $spacing-xs;
+    background: $color-warning;
+    color: $color-primary-dark;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    border-radius: $border-radius-full;
+  }
+}
+
+// Approval Card
+.approval-card {
+  background: $color-bg-primary;
+  border: 0.1rem solid $color-border-light;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-secondary;
+    box-shadow: 0 0 0 0.3rem rgba($color-secondary, 0.1);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  &__action,
+  &__entity,
+  &__status {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+    text-transform: uppercase;
+  }
+
+  &__entity {
+    background: $color-bg-tertiary;
+    color: $color-text-secondary;
+  }
+
+  &__status {
+    margin-left: auto;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-md;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__avatar {
+    @include flex-center;
+    width: 3.2rem;
+    height: 3.2rem;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    color: $color-primary-dark;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    border-radius: $border-radius-full;
+  }
+
+  &__username {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__time {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-lg;
+    padding-top: $spacing-lg;
+    border-top: 0.1rem solid $color-border-light;
+  }
+}
+
+// Action badges
+.action--insert {
+  background: rgba($color-success, 0.15);
+  color: $color-success-dark;
+}
+
+.action--update {
+  background: rgba($color-warning, 0.15);
+  color: $color-warning-dark;
+}
+
+.action--delete {
+  background: rgba($color-error, 0.15);
+  color: $color-error-dark;
+}
+
+// Status badges
+.status--pending {
+  background: rgba($color-warning, 0.15);
+  color: $color-warning-dark;
+}
+
+.status--approved {
+  background: rgba($color-success, 0.15);
+  color: $color-success-dark;
+}
+
+.status--rejected {
+  background: rgba($color-error, 0.15);
+  color: $color-error-dark;
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  border: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  &--approve {
+    background: $color-success;
+    color: white;
+
+    &:hover {
+      background: $color-success-dark;
+    }
+  }
+
+  &--reject {
+    background: $color-error;
+    color: white;
+
+    &:hover {
+      background: $color-error-dark;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text-secondary;
+    border: 0.1rem solid $color-border-light;
+
+    &:hover {
+      background: $color-bg-tertiary;
+    }
+  }
+}
+
+// Modal
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-lg;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: $color-bg-primary;
+  border-radius: $border-radius-xl;
+  width: 100%;
+  max-width: 60rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+
+  &--small {
+    max-width: 40rem;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 0.1rem solid $color-border-light;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0;
+  }
+
+  &__close {
+    @include flex-center;
+    width: 3.6rem;
+    height: 3.6rem;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-md;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &:hover {
+      background: $color-bg-tertiary;
+      color: $color-text-primary;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-xl;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-md;
+    padding: $spacing-lg $spacing-xl;
+    border-top: 0.1rem solid $color-border-light;
+  }
+}
+
+// Detail Section
+.detail-section {
+  margin-bottom: $spacing-xl;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 $spacing-md;
+  }
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+
+  &--data {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-item {
+  dt {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    margin-bottom: $spacing-xs;
+  }
+
+  dd {
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    margin: 0;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  border-radius: $border-radius-md;
+  text-transform: uppercase;
+}
+
+// User Info
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  &__avatar {
+    @include flex-center;
+    width: 4.8rem;
+    height: 4.8rem;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    color: $color-primary-dark;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    border-radius: $border-radius-full;
+    flex-shrink: 0;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &__email {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__date {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+}
+
+.rejection-reason {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: rgba($color-error, 0.05);
+  border-left: 0.3rem solid $color-error;
+  border-radius: 0 $border-radius-md $border-radius-md 0;
+
+  strong {
+    display: block;
+    font-size: $font-size-sm;
+    color: $color-error-dark;
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
+
+// Form elements
+.form-label {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-base;
+  font-family: inherit;
+  color: $color-text-primary;
+  background: $color-bg-secondary;
+  border: 0.2rem solid $color-border-light;
+  border-radius: $border-radius-lg;
+  resize: vertical;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-secondary;
+    box-shadow: 0 0 0 0.3rem rgba($color-secondary, 0.15);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
