@@ -31,7 +31,7 @@ type PanelMode = 'closed' | 'account' | 'user';
         <!-- Account Section -->
         <div class="dev-banner__section">
           <span class="dev-banner__label">Account:</span>
-          <button class="dev-banner__account" [style.border-color]="getCurrentAccountColor()" (click)="openPanel('account')">
+          <button class="dev-banner__account" (click)="openPanel('account')">
             <span class="dev-banner__account-name">{{ currentUser()?.tenantNome }}</span>
           </button>
         </div>
@@ -159,7 +159,7 @@ type PanelMode = 'closed' | 'account' | 'user';
 
     .dev-banner__account {
       background: rgba(255, 255, 255, 0.1);
-      border: 2px solid;
+      border: 2px solid white;
       color: white;
       padding: 0.4rem 1.2rem;
       border-radius: 0.4rem;
